@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DeepSeek Companion — Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div id="settings-root">
+    <aside id="settings-nav">
+      <div class="nav-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Companion</span>
+      </div>
+      <nav>
+        <a class="nav-item active" data-section="general">🔧 General</a>
+        <a class="nav-item" data-section="code">💻 Code Downloader</a>
+        <a class="nav-item" data-section="pdf">📄 PDF Settings</a>
+        <a class="nav-item" data-section="docx">📝 DOCX Settings</a>
+        <a class="nav-item" data-section="export">📤 Export</a>
+        <a class="nav-item" data-section="bookmarks">🔖 Bookmarks</a>
+        <a class="nav-item" data-section="templates">📋 Templates</a>
+        <a class="nav-item" data-section="ai">✨ Gemini AI</a>
+        <a class="nav-item" data-section="appearance">🎨 Appearance</a>
+        <a class="nav-item" data-section="about">ℹ About</a>
+      </nav>
+    </aside>
+
+    <main id="settings-main">
+      <!-- GENERAL -->
+      <section id="section-general" class="settings-section active">
+        <h2>⚙ General Settings</h2>
+        <div class="setting-group">
+          <label class="setting-label">Language</label>
+          <select id="s-language" class="setting-input">
+            <option value="en">English</option>
+            <option value="ur">اردو (Urdu)</option>
+            <option value="ar">العربية (Arabic)</option>
+            <option value="fr">Français (French)</option>
+            <option value="de">Deutsch (German)</option>
+            <option value="es">Español (Spanish)</option>
+          </select>
+        </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Auto-run on page load</label><p class="setting-desc">Automatically scan for code blocks when opening DeepSeek</p></div>
+          <label class="toggle"><input type="checkbox" id="s-autorun" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Show notifications</label><p class="setting-desc">Display toast notifications for actions</p></div>
+          <label class="toggle"><input type="checkbox" id="s-notifications" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Notification duration</label>
+          <input type="range" id="s-notif-duration" min="1" max="10" value="3" class="setting-range">
+          <span id="s-notif-duration-val" class="range-val">3s</span>
+        </div>
+        <button class="btn-danger" id="reset-all">⚠ Reset All Settings</button>
+      </section>
+
+      <!-- CODE -->
+      <section id="section-code" class="settings-section">
+        <h2>💻 Code Downloader</h2>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Auto-detect code blocks</label><p class="setting-desc">Automatically find and tag code blocks in messages</p></div>
+          <label class="toggle"><input type="checkbox" id="s-code-autodetect" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Show download button on code blocks</label></div>
+          <label class="toggle"><input type="checkbox" id="s-code-dlbtn" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Default fallback filename</label>
+          <input type="text" id="s-code-default-name" class="setting-input" value="code_block" placeholder="code_block">
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">If filename not found</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="fname-fallback" value="ask" checked> Ask me</label>
+            <label class="radio-label"><input type="radio" name="fname-fallback" value="default"> Use default name</label>
+            <label class="radio-label"><input type="radio" name="fname-fallback" value="lang"> Use language name</label>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">ZIP file organization</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="zip-org" value="lang" checked> By language/extension</label>
+            <label class="radio-label"><input type="radio" name="zip-org" value="path"> By path structure</label>
+            <label class="radio-label"><input type="radio" name="zip-org" value="flat"> Flat (all in root)</label>
+          </div>
+        </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Add README to ZIP</label></div>
+          <label class="toggle"><input type="checkbox" id="s-zip-readme" checked><span class="slider"></span></label>
+        </div>
+      </section>
+
+      <!-- PDF -->
+      <section id="section-pdf" class="settings-section">
+        <h2>📄 PDF Settings</h2>
+        <div class="setting-group">
+          <label class="setting-label">Default Theme</label>
+          <div class="theme-picker">
+            <label class="theme-opt" data-theme="deepblue"><div class="theme-swatch" style="background:linear-gradient(135deg,#1a73e8,#00c4cc)"></div><span>DeepBlue</span></label>
+            <label class="theme-opt" data-theme="obsidian"><div class="theme-swatch" style="background:linear-gradient(135deg,#1a1a1a,#bb86fc)"></div><span>Obsidian</span></label>
+            <label class="theme-opt" data-theme="scholar"><div class="theme-swatch" style="background:linear-gradient(135deg,#2c3e50,#e74c3c)"></div><span>Scholar</span></label>
+            <label class="theme-opt" data-theme="emerald"><div class="theme-swatch" style="background:linear-gradient(135deg,#00897b,#ff6f00)"></div><span>Emerald</span></label>
+          </div>
+          <input type="hidden" id="s-pdf-theme" value="deepblue">
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Page Size</label>
+          <select id="s-pdf-size" class="setting-input">
+            <option value="a4">A4</option><option value="letter">Letter</option><option value="a3">A3</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Body Font Size: <span id="s-pdf-body-fs-val">10pt</span></label>
+          <input type="range" id="s-pdf-body-fs" min="9" max="14" value="10" class="setting-range">
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Code Font Size: <span id="s-pdf-code-fs-val">8pt</span></label>
+          <input type="range" id="s-pdf-code-fs" min="7" max="12" value="8" class="setting-range">
+        </div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Cover Page</label></div><label class="toggle"><input type="checkbox" id="s-pdf-cover" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Table of Contents</label></div><label class="toggle"><input type="checkbox" id="s-pdf-toc" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Page Numbers</label></div><label class="toggle"><input type="checkbox" id="s-pdf-pagenum" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Syntax Highlighting</label></div><label class="toggle"><input type="checkbox" id="s-pdf-syntax" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Line Numbers in Code</label></div><label class="toggle"><input type="checkbox" id="s-pdf-lineno" checked><span class="slider"></span></label></div>
+      </section>
+
+      <!-- DOCX -->
+      <section id="section-docx" class="settings-section">
+        <h2>📝 DOCX Settings</h2>
+        <div class="setting-group">
+          <label class="setting-label">Primary Color</label>
+          <input type="color" id="s-docx-primary" value="#1a73e8" class="setting-color">
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Body Font</label>
+          <select id="s-docx-font" class="setting-input">
+            <option>Calibri</option><option>Times New Roman</option><option>Arial</option><option>Georgia</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Page Margins</label>
+          <select id="s-docx-margins" class="setting-input">
+            <option value="normal">Normal (2.54cm)</option><option value="narrow">Narrow (1.27cm)</option><option value="wide">Wide (5.08cm)</option>
+          </select>
+        </div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Include Code Blocks</label></div><label class="toggle"><input type="checkbox" id="s-docx-code" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Auto-fit Table Columns</label></div><label class="toggle"><input type="checkbox" id="s-docx-autofit" checked><span class="slider"></span></label></div>
+      </section>
+
+      <!-- EXPORT -->
+      <section id="section-export" class="settings-section">
+        <h2>📤 Export Settings</h2>
+        <div class="setting-group">
+          <label class="setting-label">Default Format</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="def-format" value="pdf" checked> PDF</label>
+            <label class="radio-label"><input type="radio" name="def-format" value="docx"> DOCX</label>
+            <label class="radio-label"><input type="radio" name="def-format" value="md"> Markdown</label>
+          </div>
+        </div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Include conversation title in filename</label></div><label class="toggle"><input type="checkbox" id="s-fname-title" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Include date in filename</label></div><label class="toggle"><input type="checkbox" id="s-fname-date" checked><span class="slider"></span></label></div>
+        <div class="setting-group">
+          <label class="setting-label">Filename Preview</label>
+          <div class="filename-preview" id="fname-preview">deepseek-export-2025-01-15.pdf</div>
+        </div>
+      </section>
+
+      <!-- BOOKMARKS -->
+      <section id="section-bookmarks" class="settings-section">
+        <h2>🔖 Bookmarks</h2>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Show bookmark icon on hover</label></div><label class="toggle"><input type="checkbox" id="s-bm-hover" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Show label border on messages</label></div><label class="toggle"><input type="checkbox" id="s-bm-border" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Auto-bookmark messages with code</label></div><label class="toggle"><input type="checkbox" id="s-bm-autocode"><span class="slider"></span></label></div>
+        <div class="btn-row">
+          <button class="btn-secondary" id="export-bookmarks-btn">📤 Export All Bookmarks</button>
+          <button class="btn-danger" id="clear-bookmarks-btn">🗑 Clear All Bookmarks</button>
+        </div>
+      </section>
+
+      <!-- TEMPLATES -->
+      <section id="section-templates" class="settings-section">
+        <h2>📋 Templates</h2>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Show templates button near input</label></div><label class="toggle"><input type="checkbox" id="s-tpl-show" checked><span class="slider"></span></label></div>
+        <div class="btn-row">
+          <button class="btn-secondary" id="export-templates-btn">📤 Export Templates</button>
+          <button class="btn-danger" id="clear-templates-btn">🗑 Clear All Templates</button>
+        </div>
+      </section>
+
+      <!-- GEMINI AI -->
+      <section id="section-ai" class="settings-section">
+        <h2>✨ Gemini AI Bridge</h2>
+        <div class="ai-status">
+          <span class="dot dot-green"></span>
+          <span>Gemini API key is configured and active</span>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">API Key</label>
+          <div class="api-key-row">
+            <input type="password" id="s-gemini-key" class="setting-input" placeholder="Enter your Gemini API key">
+            <button class="btn-secondary btn-sm" id="verify-gemini">✓ Verify</button>
+          </div>
+          <p class="setting-desc">Your API key is stored locally in your browser only. Never sent to third parties.</p>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Default Mode</label>
+          <select id="s-gemini-mode" class="setting-input">
+            <option value="reformat">Reformat & Beautify</option>
+            <option value="summarize">Summarize</option>
+            <option value="expand">Expand & Elaborate</option>
+            <option value="simplify">Simplify</option>
+            <option value="keypoints">Extract Key Points</option>
+            <option value="translate">Translate</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Max Response Length: <span id="s-max-tokens-val">2000</span> tokens</label>
+          <input type="range" id="s-max-tokens" min="500" max="4000" value="2000" step="100" class="setting-range">
+        </div>
+      </section>
+
+      <!-- APPEARANCE -->
+      <section id="section-appearance" class="settings-section">
+        <h2>🎨 Appearance</h2>
+        <div class="setting-group">
+          <label class="setting-label">Panel Theme</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="panel-theme" value="dark" checked> Dark (default)</label>
+            <label class="radio-label"><input type="radio" name="panel-theme" value="light"> Light</label>
+            <label class="radio-label"><input type="radio" name="panel-theme" value="auto"> Auto (system)</label>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Accent Color</label>
+          <input type="color" id="s-accent-color" value="#2f81f7" class="setting-color">
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Floating Toolbar</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="toolbar-vis" value="hover" checked> Show on hover</label>
+            <label class="radio-label"><input type="radio" name="toolbar-vis" value="always"> Always visible</label>
+            <label class="radio-label"><input type="radio" name="toolbar-vis" value="never"> Never</label>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label class="setting-label">Animation Speed</label>
+          <div class="radio-col">
+            <label class="radio-label"><input type="radio" name="anim-speed" value="fast"> Fast</label>
+            <label class="radio-label"><input type="radio" name="anim-speed" value="normal" checked> Normal</label>
+            <label class="radio-label"><input type="radio" name="anim-speed" value="slow"> Slow</label>
+            <label class="radio-label"><input type="radio" name="anim-speed" value="none"> None</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="section-about" class="settings-section">
+        <h2>ℹ About</h2>
+        <div class="about-card">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <h3>DeepSeek Companion</h3>
+          <p class="version-info">Version 1.0.0 · April 2026</p>
+          <p class="about-desc">Your all-in-one companion for DeepSeek Chat. Download code, export to PDF/DOCX, manage bookmarks, and supercharge your workflow with Gemini AI.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn-secondary" id="open-help-btn">📖 Open Help</button>
+        </div>
+        <div class="changelog">
+          <h4>Changelog</h4>
+          <div class="changelog-item"><span class="cl-version">v1.0.0</span><span class="cl-desc">Initial release — all features included</span></div>
+        </div>
+      </section>
+
+    </main>
+
+    <div id="save-bar">
+      <span id="save-status"></span>
+      <button class="btn-primary" id="save-settings">💾 Save Settings</button>
+    </div>
+  </div>
+  <script src="settings.js"></script>
+</body>
+</html>

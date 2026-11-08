@@ -1,0 +1,22 @@
+# Archives and legacy backups
+_archive/
+*.zip
+*.tar.gz
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment & secrets
+.env
+.env.*
+*.secret
+*.pem
+*.key
+
+# Development & logs
+*.log
+.vscode/
+.idea/
+node_modules/

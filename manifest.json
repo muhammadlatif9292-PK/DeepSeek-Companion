@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "DeepSeek Companion — King Edition",
+  "version": "3.0.0",
+  "description": "The ultimate DeepSeek power tool: Smart Code Vault, AI-powered file management, Gemini Bridge, PDF/DOCX/ZIP export, Bookmarks, Templates, and developer tools.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.deepseek.com/*"],
+      "js": [
+        "libs/dompurify.min.js",
+        "libs/marked.min.js",
+        "utils/lang-map.js",
+        "utils/helpers.js",
+        "utils/storage.js",
+        "utils/toast.js",
+        "utils/dom-scanner.js",
+        "engines/text-structurizer.js",
+        "engines/filename-detector.js",
+        "engines/code-extractor.js",
+        "content.js"
+      ],
+      "css": [],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "storage",
+    "downloads",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://chat.deepseek.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "sidebar/sidebar.html",
+        "sidebar/sidebar.css",
+        "sidebar/sidebar.js",
+        "libs/*",
+        "assets/fonts/*",
+        "assets/logo.svg",
+        "engines/*"
+      ],
+      "matches": ["https://chat.deepseek.com/*"]
+    }
+  ],
+  "options_page": "settings/settings.html"
+}

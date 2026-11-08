@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DeepSeek Companion — Help</title>
+  <link rel="stylesheet" href="help.css">
+</head>
+<body>
+  <div id="help-root">
+    <header id="help-header">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <h1>DeepSeek Companion — Help & Manual</h1>
+    </header>
+    <div id="help-body">
+      <aside id="help-nav">
+        <a href="#getting-started">1. Getting Started</a>
+        <a href="#code-downloader">2. Code Downloader</a>
+        <a href="#pdf-export">3. Exporting to PDF</a>
+        <a href="#docx-export">4. Exporting to DOCX</a>
+        <a href="#bookmarks">5. Bookmarks</a>
+        <a href="#templates">6. Templates</a>
+        <a href="#gemini-bridge">7. Gemini AI Bridge</a>
+        <a href="#shortcuts">8. Keyboard Shortcuts</a>
+        <a href="#faq">9. FAQ</a>
+        <a href="#privacy">10. Privacy</a>
+      </aside>
+      <main id="help-content">
+        <section id="getting-started"><h2>1. Getting Started</h2>
+          <p>DeepSeek Companion adds a powerful sidebar panel to <strong>chat.deepseek.com</strong>. Once installed, a small toggle button appears on the right edge of the DeepSeek page.</p>
+          <h3>Opening the Sidebar</h3>
+          <p>Click the small <strong>◧ grid icon</strong> on the right edge of the page to toggle the companion sidebar open and closed. You can also click the extension icon in your browser toolbar.</p>
+          <h3>First Things to Try</h3>
+          <ul>
+            <li>Open a chat on DeepSeek that has code in the response</li>
+            <li>The extension will automatically detect code blocks and show a <strong>⬇ download button</strong> next to them</li>
+            <li>Open the sidebar → <strong>Code Vault</strong> tab to see all detected files</li>
+            <li>Try <strong>📄 PDF</strong> export from the Export Center tab</li>
+          </ul>
+        </section>
+        <section id="code-downloader"><h2>2. Code Downloader</h2>
+          <p>The extension automatically scans every DeepSeek response for code blocks and adds a download button to each one.</p>
+          <h3>Filename Detection</h3>
+          <p>The extension uses 4 levels to detect filenames:</p>
+          <ol>
+            <li><strong>Explicit filename</strong> in the text before the code block (e.g., "Save as <code>App.jsx</code>")</li>
+            <li><strong>Language tag</strong> on the code block (e.g., ```python → script.py)</li>
+            <li><strong>Content analysis</strong> — reads the code to guess the type</li>
+            <li><strong>Fallback</strong> — defaults to code_block.txt</li>
+          </ol>
+          <h3>Renaming Files</h3>
+          <p>In the Code Vault tab, click on a filename to edit it before downloading.</p>
+          <h3>Downloading All Code as ZIP</h3>
+          <p>Click <strong>📦 ZIP All</strong> in the Code Vault header to download all detected files as a single ZIP archive with automatic folder organization.</p>
+        </section>
+        <section id="pdf-export"><h2>3. Exporting to PDF</h2>
+          <p>Go to the <strong>Export Center</strong> tab → choose export scope → click <strong>📄 PDF</strong>.</p>
+          <h3>Choosing a Theme</h3>
+          <p>Four themes are available: <strong>DeepBlue</strong> (default), <strong>Obsidian</strong> (dark), <strong>Scholar</strong> (academic), and <strong>Emerald</strong>. Select from the PDF Options dropdown.</p>
+          <h3>Exporting a Full Conversation</h3>
+          <p>Select <strong>"Entire conversation"</strong> from the scope selector to export all assistant messages in the current chat.</p>
+        </section>
+        <section id="docx-export"><h2>4. Exporting to DOCX</h2>
+          <p>Click <strong>📝 DOCX</strong> in the Export Center. The file will download as a properly formatted Word document with headings, code blocks, and tables.</p>
+          <p>Open in Microsoft Word, Google Docs, or LibreOffice.</p>
+        </section>
+        <section id="bookmarks"><h2>5. Bookmarks</h2>
+          <p>Hover over any DeepSeek response message — a <strong>🔖 bookmark icon</strong> appears in the top-right corner. Click it to bookmark the message.</p>
+          <p>View all bookmarks in the <strong>🔖 Bookmarks</strong> tab. You can assign labels, filter by label, and export all bookmarks as a PDF summary.</p>
+        </section>
+        <section id="templates"><h2>6. Templates</h2>
+          <p>Templates let you save reusable prompts and insert them into DeepSeek's input box with one click.</p>
+          <h3>Creating a Template</h3>
+          <p>Go to the <strong>📝 Templates</strong> tab → click <strong>+ New</strong> → enter a name, category, and template text.</p>
+          <h3>Using Variables</h3>
+          <p>Use <code>{{variable_name}}</code> placeholders in your template. When you click "Use", a small form will appear asking for each variable.</p>
+          <h3>Importing Templates</h3>
+          <p>Click <strong>📥 Import</strong> and select a <code>.json</code> file of templates previously exported from this extension.</p>
+        </section>
+        <section id="gemini-bridge"><h2>7. Gemini AI Bridge</h2>
+          <p>The <strong>✨ AI Bridge</strong> tab sends any DeepSeek response to Gemini for reformatting, summarizing, translating, or other processing.</p>
+          <h3>Available Modes</h3>
+          <ul>
+            <li><strong>Reformat & Beautify</strong> — restructures content with headings and examples</li>
+            <li><strong>Summarize</strong> — creates 3-5 bullet points</li>
+            <li><strong>Expand & Elaborate</strong> — adds more detail and examples</li>
+            <li><strong>Simplify</strong> — explains at beginner level</li>
+            <li><strong>Extract Key Points</strong> — lists facts and action items</li>
+            <li><strong>Translate</strong> — translates to your chosen language</li>
+            <li><strong>Custom Prompt</strong> — your own instruction</li>
+          </ul>
+        </section>
+        <section id="shortcuts"><h2>8. Keyboard Shortcuts</h2>
+          <table class="shortcuts-table">
+            <tr><th>Action</th><th>Shortcut</th></tr>
+            <tr><td>Toggle Sidebar</td><td>Configured in Chrome settings</td></tr>
+            <tr><td>Download code block</td><td>Click ⬇ button on code block</td></tr>
+            <tr><td>Bookmark message</td><td>Click 🔖 on hover</td></tr>
+            <tr><td>Export PDF</td><td>Floating toolbar → 📄 PDF</td></tr>
+          </table>
+        </section>
+        <section id="faq"><h2>9. FAQ</h2>
+          <details><summary>Why wasn't my filename detected?</summary><p>The extension looks for filename patterns in the text before the code block. Try explicitly mentioning the filename, e.g., "Save this as <code>App.jsx</code>". The extension has 4 fallback levels and will always give you a downloadable file.</p></details>
+          <details><summary>The extension stopped working after a DeepSeek update</summary><p>DeepSeek may have changed their page structure. The extension uses resilient selectors, but major redesigns can affect detection. Try refreshing the page. If the issue persists, check for an extension update.</p></details>
+          <details><summary>How do I reset everything?</summary><p>Go to <strong>Settings → General → Reset All Settings</strong>. This clears all settings, bookmarks, and templates from storage.</p></details>
+          <details><summary>Is my data sent anywhere?</summary><p>Your data stays in your browser. The only external request is when you use the Gemini AI Bridge, which sends the selected text to Google's Gemini API using your configured key.</p></details>
+        </section>
+        <section id="privacy"><h2>10. Privacy Policy</h2>
+          <p>DeepSeek Companion stores the following data <strong>locally in your browser only</strong>:</p>
+          <ul>
+            <li>Bookmarks (chrome.storage.local)</li>
+            <li>Templates (chrome.storage.local)</li>
+            <li>Settings and preferences (chrome.storage.sync)</li>
+            <li>Export history (chrome.storage.local)</li>
+          </ul>
+          <p><strong>No data is sent to external servers</strong> except Gemini API calls, which are made directly from your browser to Google's API using your key.</p>
+          <p>To delete all stored data: Settings → General → Reset All Settings.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
