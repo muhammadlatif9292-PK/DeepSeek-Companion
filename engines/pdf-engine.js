@@ -17,7 +17,7 @@ window.PDFEngine = {
   async generate(text, title, options = {}) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ format: 'a4', unit: 'mm', orientation: 'portrait' });
-    const theme = this.THEMES[options.theme || 'deepblue'];
+    const theme = this.THEMES[options.theme || 'deepblue'] || this.THEMES.deepblue;
     const W = 210, ML = 15, MR = 15, pageW = W - ML - MR;
     let y = 20;
     let pageNum = 1;
@@ -319,6 +319,12 @@ window.PDFEngine = {
     }
 
     const filename = `${(title || 'deepseek-export').replace(/[^a-z0-9]/gi,'-').slice(0,30)}-${Date.now()}.pdf`;
+    if (options.useExtensionDownload && typeof chrome !== 'undefined' && chrome.downloads && chrome.downloads.download) {
+      const dataUri = doc.output('datauristring');
+      await chrome.downloads.download({ url: dataUri, filename, saveAs: false });
+      return filename;
+    }
     doc.save(filename);
+    return filename;
   }
 };

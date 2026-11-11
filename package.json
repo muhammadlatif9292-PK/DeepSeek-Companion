@@ -1,0 +1,13 @@
+{
+  "name": "deepseek-companion-pro",
+  "version": "6.0.0",
+  "private": true,
+  "description": "Chrome MV3 extension for DeepSeek Chat code vault extraction, ZIP patching, Zone scoping, Send Engine v5 auto-proceed, and multi-format export.",
+  "scripts": {
+    "test": "node tests/run-ci.mjs",
+    "ci": "node tests/run-ci.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,18 @@
+FINAL FIXES APPLIED
+
+1. Auto-send now performs:
+   - mousedown
+   - mouseup
+   - click
+   - fallback Enter events
+
+2. Prevented issue where 'continue' only gets pasted.
+
+3. Disabled TypeScript downloading logic.
+
+4. Removed .ts extra files where possible.
+
+INSTALL:
+- Remove old extension
+- Extract this ZIP
+- Load unpacked -> ext_v4

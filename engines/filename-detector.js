@@ -1,40 +1,28 @@
-// engines/filename-detector.js — King Edition v3.0.0
-// KEY FIX: Better filename detection, prevents generic "script.sh" / "output.txt" naming
+// engines/filename-detector.js — King Edition v3.3.0
+// KEY UPGRADE: First-line comment detection + path context extraction
 window.FilenameDetector = {
 
-  // Counter to make generic fallback names unique
-  _genericCount: {},
-
   detect(precedingText, lang, code) {
-    // Level 1: Explicit filename in preceding text (highest confidence)
-    let filename = this._detectFromText(precedingText);
+    // LEVEL 1: First-line comment in code — most reliable when using the DSC prompt
+    // Detects: // src/components/Button.tsx  OR  # scripts/setup.sh  OR  /* styles.css */
+    let filename = this._detectFromFirstLine(code);
     if (filename) {
-      const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
-      const langInfo = LANGUAGE_MAP[lang] || {};
-      return {
-        filename,
-        extension: ext,
-        mimeType: langInfo.mime || 'text/plain',
-        language: lang,
-        confidence: 'high'
-      };
+      return this._build(filename, lang, 'high');
     }
 
-    // Level 2: Try to infer filename from first comment line in code
-    filename = this._detectFromCodeComment(code, lang);
+    // LEVEL 2: Explicit filename in preceding markdown text
+    filename = this._detectFromText(precedingText);
     if (filename) {
-      const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
-      const langInfo = LANGUAGE_MAP[lang] || {};
-      return {
-        filename,
-        extension: ext,
-        mimeType: langInfo.mime || 'text/plain',
-        language: lang,
-        confidence: 'high'
-      };
+      return this._build(filename, lang, 'high');
     }
 
-    // Level 3: Language tag → use language default
+    // LEVEL 3: Path context — look for file path patterns in preceding text
+    filename = this._detectFromPathContext(precedingText, lang);
+    if (filename) {
+      return this._build(filename, lang, 'medium');
+    }
+
+    // LEVEL 4: Language tag → language default name
     if (lang && LANGUAGE_MAP[lang]) {
       const info = LANGUAGE_MAP[lang];
       return {
@@ -46,7 +34,7 @@ window.FilenameDetector = {
       };
     }
 
-    // Level 4: Content analysis
+    // LEVEL 5: Content analysis
     const analyzed = this._analyzeContent(code);
     if (analyzed) {
       const info = LANGUAGE_MAP[analyzed] || {};
@@ -59,7 +47,7 @@ window.FilenameDetector = {
       };
     }
 
-    // Level 5: Fallback
+    // LEVEL 6: Fallback
     return {
       filename: 'code_block.txt',
       extension: '.txt',
@@ -69,46 +57,85 @@ window.FilenameDetector = {
     };
   },
 
-  // Detect filename from comment on first line: // filename.ts  OR  # filename.sh
-  _detectFromCodeComment(code, lang) {
-    if (!code) return null;
-    const firstLine = code.split('\n')[0].trim();
+  _build(filename, lang, confidence) {
+    const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
+    const langInfo = (lang && LANGUAGE_MAP[lang]) ? LANGUAGE_MAP[lang] : {};
+    return {
+      filename,
+      extension: ext,
+      mimeType: langInfo.mime || this._mimeFromExt(ext),
+      language: lang,
+      confidence
+    };
+  },
 
-    // Patterns: // path/to/file.ts  OR  # path/to/file.sh  OR  /* file.css */
+  // Detect filename from FIRST LINE comment — works perfectly with the DSC prompt
+  _detectFromFirstLine(code) {
+    if (!code) return null;
+    const first = code.split('\n')[0].trim();
+
     const patterns = [
-      /^\/\/\s+([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]{1,6})\s*$/,         // // filename.ts
-      /^\/\/\s+.*?([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]{1,6})\s*[-–—]/, // // path/file.ts — description
-      /^#\s+([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]{1,6})\s*$/,             // # filename.sh
-      /^\/\*\s+([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]{1,6})\s*\*\//,       // /* file.css */
+      // // src/components/Button.tsx
+      /^\/\/\s+([\w./\-]+\/[\w.\-]+\.[\w]{1,8})\s*$/,
+      // // Button.tsx
+      /^\/\/\s+([\w.\-]+\.[\w]{1,8})\s*$/,
+      // // src/components/Button.tsx — Some description
+      /^\/\/\s+([\w./\-]+\.[\w]{1,8})\s*[-–—]/,
+      // # scripts/setup.sh
+      /^#\s+([\w./\-]+\.[\w]{1,8})\s*$/,
+      // /* styles/global.css */
+      /^\/\*\s*([\w./\-]+\.[\w]{1,8})\s*\*\//,
+      // <!-- index.html -->
+      /^<!--\s*([\w./\-]+\.[\w]{1,8})\s*-->/,
     ];
 
     for (const pat of patterns) {
-      const m = firstLine.match(pat);
-      if (m && m[1] && m[1].length < 80 && m[1].includes('.')) {
-        // Make sure it looks like a real file, not a URL or comment
-        if (!m[1].includes('://') && !m[1].startsWith('www.')) {
-          return m[1];
-        }
+      const m = first.match(pat);
+      if (m && m[1] && m[1].length < 120 && !m[1].includes('://')) {
+        return m[1].replace(/^\.\//, '');
       }
     }
     return null;
   },
 
+  // Look for filename patterns in preceding text (markdown around the block)
   _detectFromText(text) {
     if (!text) return null;
     const patterns = [
-      /`([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)`/,
-      /"([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)"/,
-      /'([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)'/,
-      /(?:save as|create|file called|named|called|create a file called|create file|filename:|file:)\s+([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)/i,
-      /\*\*([a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)\*\*/,
-      /(?:^|\s)(\.\/[a-zA-Z0-9_\-./]+\.[a-zA-Z0-9]+)/m,
-      /(?:^|\s)([a-zA-Z0-9_][a-zA-Z0-9_\-.]*\.[a-zA-Z]{1,6})(?:\s|$)/m,
+      // `src/components/Button.tsx`
+      /`([\w./\-]+\.[\w]{1,8})`/,
+      // **Button.tsx** or __Button.tsx__
+      /\*\*([\w./\-]+\.[\w]{1,8})\*\*/,
+      // "Button.tsx" or 'Button.tsx'
+      /["']([\w./\-]+\.[\w]{1,8})["']/,
+      // File: src/Button.tsx  or  Path: src/
+      /(?:file|path|create|update|modify|edit|here is|here's|below is|following)[:\s]+[`"]?([\w./\-]+\.[\w]{1,8})/i,
+      // ./src/Button.tsx  (starts with ./)
+      /(?:^|\s)(\.\/[\w./\-]+\.[\w]{1,8})/m,
+      // src/something/file.ts  (multi-segment path)
+      /(?:^|\s)([\w][\w.\-]*\/[\w.\-]+\/[\w.\-]+\.[\w]{1,8})(?:\s|$)/m,
+      // Simpler: anything.ext at word boundary
+      /(?:^|\s)([\w][\w.\-]*\.(?:ts|tsx|js|jsx|py|css|html|json|sh|md|yml|yaml|sql|env|config|lock))(?:\s|$)/m,
     ];
     for (const pat of patterns) {
       const m = text.match(pat);
-      if (m && m[1] && m[1].length < 80) return m[1];
+      if (m && m[1] && m[1].length < 120 && !m[1].includes('://')) {
+        return m[1].replace(/^\.\//, '');
+      }
     }
+    return null;
+  },
+
+  // Extract path from context like "Wave 1 > src/engine/index.ts" or header text
+  _detectFromPathContext(text, lang) {
+    if (!text) return null;
+
+    // Look for anything that looks like a file path with multiple segments
+    const pathMatch = text.match(/(?:^|[\s>:])([a-zA-Z][\w.\-]*(?:\/[\w.\-]+){1,8}\.[\w]{1,8})(?:\s|$)/m);
+    if (pathMatch && pathMatch[1] && pathMatch[1].length < 150) {
+      return pathMatch[1];
+    }
+
     return null;
   },
 
@@ -121,9 +148,15 @@ window.FilenameDetector = {
     if (/^(def |import |from |class |print\()/.test(t)) return 'python';
     if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\s/i.test(t)) return 'sql';
     if (/^(function|const |let |var |import |export |class )/.test(t)) return 'javascript';
+    if (/^(interface |type |enum )/.test(t)) return 'typescript';
     if (/^---\n/.test(t) || /^\w+:\s+\S/.test(t)) return 'yaml';
     if (/^\[[\w\s]+\]/.test(t)) return 'ini';
     if (t.startsWith('#!')) return 'bash';
     return null;
+  },
+
+  _mimeFromExt(ext) {
+    const m = { '.ts':'text/typescript', '.tsx':'text/typescript', '.js':'text/javascript', '.jsx':'text/javascript', '.py':'text/x-python', '.html':'text/html', '.css':'text/css', '.json':'application/json', '.sh':'text/x-sh', '.md':'text/markdown', '.yml':'text/yaml', '.yaml':'text/yaml' };
+    return m[ext] || 'text/plain';
   }
 };

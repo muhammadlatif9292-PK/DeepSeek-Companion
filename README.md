@@ -1,133 +1,110 @@
-# DeepSeek Companion — King Edition (v3.0.0)
+# DeepSeek Companion Pro (v6.0.0)
 
-> **The ultimate developer power tool for DeepSeek Chat: Smart Code Vault, AI-powered file management, Gemini Bridge, multi-format export, bookmarks, and productivity workflows.**
+> **Smart Code Vault, Binary-Safe ZIP Patcher, Zone Range Scoping, Lexical Send Engine v5 (Auto-Proceed), and Multi-Format Chat Exporter for [chat.deepseek.com](https://chat.deepseek.com).**
 
-DeepSeek Companion is a feature-rich, high-performance browser extension built on Chrome Extension **Manifest V3**. It seamlessly integrates into [chat.deepseek.com](https://chat.deepseek.com) to automate code extraction, multi-format documentation exports, and AI-assisted workflows.
-
----
-
-## 🚀 Key Features
-
-### 🧠 Smart Code Vault & Instant Bulk Extractor
-- **Instant Scan**: Scans DeepSeek conversations instantly to capture every code block without requiring slow manual scrolling.
-- **Filename & Path Auto-Detection**: Intelligently detects filenames from code comments, Markdown titles, or code structure (e.g. `src/components/Header.tsx`).
-- **Junk Filtering**: Automatically filters out ephemeral shell commands (`run.sh`, `output.txt`, single command prompts) to retain only meaningful production code.
-- **Language Detection**: Robust language mapping across TypeScript, Python, Rust, Go, JavaScript, C++, Dart, SQL, and 40+ other languages.
-
-### 📦 Multi-Format Export Engine
-- **Structured Project ZIP**: Generates downloadable project zip files preserving folder hierarchies, complete with an auto-generated project `README.md`.
-- **Publication-Ready PDF**: Compiles full chats or selected code blocks into clean PDFs with customizable themes (*Deep Blue*, *Midnight Dark*, *Minimalist Light*).
-- **DOCX Word Documents**: Clean document layout compilation for reports and documentation sharing.
-- **Markdown & Excel**: Exports conversation logs, prompt templates, and code catalogs into standard `.md` or `.xlsx` files.
-
-### ⚡ Gemini AI Bridge
-- Built-in integration with Google Gemini Flash models for instant in-context assistance:
-  - **Reformat & Beautify**: Organizes complex answers into structured explanations with headings.
-  - **Summarize**: Condenses lengthy technical explanations into 3–5 actionable bullet points.
-  - **Code Debugger**: Analyzes generated snippets to detect edge cases and bug risks.
-  - **Beginner Simplifier**: Explains complex algorithms in plain English.
-  - **Language Translation**: Translates technical documentation into multiple languages.
-
-### 🔖 Bookmarks & Prompt Templates
-- **Conversation Bookmarks**: Save essential explanations, solutions, and reasoning chains.
-- **Custom Prompt Library**: Save frequently used developer prompts and insert them directly into the DeepSeek prompt textarea with one click.
-
-### 🎨 Seamless Injected Sidebar UI
-- Isolated iframe architecture prevents styling conflicts with DeepSeek's native styles.
-- Dark/Light theme synchronization, smooth glassmorphism design, and quick-toggle hotkeys.
+DeepSeek Companion Pro is a lightweight, zero-external-API Chrome Extension (**Manifest V3**) tailored specifically to DeepSeek's real React / Lexical DOM structure (`.ds-message`, `.ds-markdown`, `.md-code-block`).
 
 ---
 
-## 📂 Repository Structure
+## Key Features
+
+### Smart Code Vault & Line-1 Path Extraction
+- **Fast Deep Scan (`requestAnimationFrame` + `IntersectionObserver`)**: Automatically collects lazy-loaded code blocks across long DeepSeek sessions while staying responsive.
+- **6-Level Filename & Path Detection**: Detects paths from Line-1 comments (`// src/app/page.tsx`, `# scripts/setup.sh`, `/* styles.css */`, `<!-- index.html -->`), surrounding markdown context, language tags, and content heuristics.
+- **Version Resolution & Junk Filtering**: Keeps only the **latest occurrence** of each file path when DeepSeek revises a file across replies, deduplicates anonymous snippets by content fingerprint, and filters out trivial terminal commands (`ls`, `cd`, `npm run`, build logs).
+- **Per-Block & Floating Message Toolbars**: Injects one-click file download buttons directly into DeepSeek's `.md-code-block-banner-wrap` headers plus hover toolbars (`Code`, `PDF`, `MD`) on each message.
+
+### Binary-Safe ZIP Patcher (`engines/zip-patcher.js`)
+- Upload an existing project `.zip` archive and merge updated/new files from the Code Vault.
+- Copies untouched ZIP entries as raw `uint8array` bytes so images, fonts, binaries, and compression metadata remain intact without UTF-8 corruption.
+- Produces a granular patch diff report (`added`, `replaced`, `unchanged`, `skipped`).
+
+### Zone Selector (`🎯 Zone`)
+- Restricts scanning, Vault indexing, ZIP creation, and chat exports (`Last response only` or `Entire conversation`) to an explicit `[START -> END]` message range via click-to-select, manual 1-based numbering, or quick presets (`Last 5/10/20`, `First 10`).
+
+### Send Engine v5 & Auto-Proceed (`PROCEED` Watcher)
+- **Lexical/React Input Injection**: Dispatches the proper `focus -> selectionchange -> beforeinput -> execCommand('insertText') -> Range fallback -> input/change/keyup` sequence required by DeepSeek's `[contenteditable="true"]` editor, paired with proximity send-button discovery, pointer/mouse dispatch, streaming verification, and 3x retry.
+- **Auto Continue**: Monitors completed assistant replies for a trailing `PROCEED` marker and automatically submits `"continue"` across multi-wave code generations.
+- **Built-in DSC Prompt Templates & Quick Prompts**: One-click insertion of Full / Short / Rules prompts plus 12 developer quick-action prompts (`Code Review`, `Write Tests`, `Refactor`, `To TypeScript`, etc.).
+
+### Multi-Format Export (`PDF`, `DOCX`, `Markdown`, `Plain Text`, `ZIP`)
+- **PDF (`engines/pdf-engine.js`)**: Themes (*DeepBlue*, *Obsidian*, *Scholar*, *Emerald*), cover page, automatic table of contents, callouts, tables, code blocks, and page footers via `jsPDF`.
+- **DOCX (`engines/docx-engine.js`)**: Pure OpenXML `.docx` archive compilation with styled headings, bullet/numbered lists, callouts, dark-styled code blocks, and tables.
+- **Markdown & Text**: Clean Markdown frontmatter export and HTML-stripped plain text export.
+
+---
+
+## Repository Structure
 
 ```text
 DeepSeek-Companion/
-├── assets/                  # Icons and branding assets
-│   ├── icons/               # 16px, 48px, 128px extension icons
-│   └── logo.svg             # Vector logo
-├── engines/                 # Export and analysis engines
-│   ├── code-extractor.js    # Code block extraction and parsing
-│   ├── docx-engine.js       # DOCX document compilation
-│   ├── filename-detector.js # Heuristic filename inference
-│   ├── markdown-exporter.js # Markdown export generator
-│   ├── pdf-engine.js        # jsPDF layout and theme compiler
-│   ├── text-structurizer.js # Content restructuring engine
-│   └── zip-builder.js       # JSZip project bundler
-├── help/                    # User manual and documentation
-│   ├── help.html
-│   └── help.css
-├── libs/                    # Vendor libraries
-│   ├── dompurify.min.js     # HTML sanitization
-│   ├── highlight.min.js     # Syntax highlighting
-│   ├── jspdf.umd.min.js     # Client-side PDF generation
-│   ├── jspdf-autotable.min.js
-│   ├── jszip.min.js         # Client-side ZIP generation
-│   ├── marked.min.js        # Markdown parser
-│   └── xlsx.min.js          # Excel spreadsheet generation
-├── popup/                   # Extension toolbar popup
-│   ├── popup.html
-│   ├── popup.css
-│   └── popup.js
-├── settings/                # Options and configuration page
-│   ├── settings.html
-│   ├── settings.css
-│   └── settings.js
-├── sidebar/                 # Injected companion sidebar
-│   ├── sidebar.html
-│   ├── sidebar.css
-│   └── sidebar.js
-├── utils/                   # Shared utility modules
-│   ├── dom-scanner.js       # DOM traversal and message detection
-│   ├── helpers.js           # String and clipboard utilities
-│   ├── lang-map.js          # Programming language registry
-│   ├── storage.js           # Chrome storage abstraction
-│   └── toast.js             # In-app toast notifications
-├── background.js            # Manifest V3 service worker
-├── content.js               # Content script injected into DeepSeek
-├── manifest.json            # Extension configuration (Manifest V3)
-├── .gitignore               # Ignored build and archive artifacts
-└── README.md                # Project documentation
+├── .github/workflows/ci.yml      # Automated CI verification workflow
+├── assets/
+│   ├── icons/                    # 16px, 48px, 128px PNG icons
+│   └── logo.svg                  # Vector logo
+├── docs/                         # Build & fix notes (FIXES_APPLIED, FINAL_FIXES, SEND_FIX_v5)
+├── engines/
+│   ├── code-extractor.js         # Code extraction and banner download button injection
+│   ├── docx-engine.js            # Pure OpenXML DOCX compiler
+│   ├── filename-detector.js      # 6-level filename & path heuristic engine
+│   ├── markdown-exporter.js      # Markdown frontmatter exporter
+│   ├── pdf-engine.js             # jsPDF themed document compiler
+│   ├── text-structurizer.js      # Markdown structure parser for PDF/DOCX
+│   └── zip-patcher.js            # Raw uint8array binary-safe ZIP merger
+├── help/
+│   ├── DSC_PROMPT.md             # DeepSeek AI coding prompt reference
+│   ├── help.css
+│   └── help.html
+├── libs/                         # Bundled client-side libraries (DOMPurify, jsPDF, JSZip, marked)
+├── popup/                        # Toolbar popup showing DeepSeek status, Vault Files & Exports
+├── settings/                     # Extension options page
+├── sidebar/                      # Isolated iframe UI (Vault, Export, Patcher, Zone, Dev)
+├── tests/
+│   └── run-ci.mjs                # Automated MV3, unit & integration verification suite
+├── utils/                        # DOM scanner, helpers, language registry, storage & toast UI
+├── background.js                 # MV3 service worker (ZIP base64 data URI & PDF relay)
+├── content.js                    # Content script (Send Engine v5, scanner, Zone, Auto-Proceed)
+├── manifest.json                 # Chrome Extension Manifest V3 configuration
+└── package.json                  # Test script entry (`npm test`)
 ```
 
 ---
 
-## 🔧 Installation & Setup
+## Installation & Verification
 
-### Running in Chrome / Edge / Brave
+### Running Unpacked in Chromium Browsers
 
-1. Clone or download this repository:
+1. Clone the repository:
    ```bash
    git clone https://github.com/muhammadlatif9292-PK/DeepSeek-Companion.git
    ```
-2. Open your Chromium-based browser and navigate to:
-   - Chrome: `chrome://extensions`
-   - Edge: `edge://extensions`
-   - Brave: `brave://extensions`
-3. Enable **Developer mode** (toggle in the top-right corner).
-4. Click **Load unpacked** and select the `DeepSeek-Companion` folder.
-5. Navigate to [chat.deepseek.com](https://chat.deepseek.com) — the companion sidebar toggle will appear automatically!
+2. Open `chrome://extensions` (or `edge://extensions` / `brave://extensions`).
+3. Enable **Developer mode**.
+4. Click **Load unpacked** and select the cloned `DeepSeek-Companion` directory.
+5. Open [chat.deepseek.com](https://chat.deepseek.com).
 
-### Configuring Gemini AI Bridge (Optional)
+### Running Automated Verification Tests
 
-1. Obtain a free API key from [Google AI Studio](https://aistudio.google.com/).
-2. Open the DeepSeek Companion sidebar or Settings page.
-3. Paste your Gemini API key in the API Key field and click **Verify & Save**.
-4. The key is stored locally in your browser's private extension storage (`chrome.storage.local`) and is never sent to third-party servers.
+Requires Node.js >= 18 (zero external packages required):
 
----
+```bash
+npm test
+```
 
-## 🔒 Permissions Disclosure
-
-- `storage`: Persists bookmarks, templates, user preferences, and Code Vault items locally.
-- `downloads`: Saves exported ZIP, PDF, DOCX, and Markdown files to your device.
-- `activeTab` / `scripting`: Injects the sidebar and extracts code blocks from active DeepSeek chats.
-- `clipboardWrite`: Copies code snippets and prompts to your clipboard.
-- Host permissions:
-  - `https://chat.deepseek.com/*`: To run the companion on DeepSeek Chat.
-  - `https://generativelanguage.googleapis.com/*`: To communicate directly with the Gemini API when AI features are invoked.
+The test suite validates Manifest V3 consistency, JavaScript syntax across all extension scripts, MV3 Service Worker `EXPORT_ZIP`/`EXPORT_PDF` execution (ensuring no `URL.createObjectURL` usage), DOM scanner & Code Extractor behavior, FilenameDetector heuristics, TextStructurizer parsing, binary-preserving ZipPatcher roundtrips, HTML/JS ID wiring, Send Engine v5 event ordering, and Sidebar/Content Export flows.
 
 ---
 
-## 📄 License & Attribution
+## Permissions Disclosure
 
-Designed and engineered by **Muhammad Hamad Latif** (`muhammadlatif9292@gmail.com`). All rights reserved.
+- `storage`: Persists export history, settings, and popup summary counters in `chrome.storage.local`.
+- `downloads`: Downloads generated `.zip`, `.pdf`, `.docx`, `.md`, and `.txt` files.
+- `activeTab` / `scripting` / `tabs`: Allows popup sidebar toggle and opening help/settings tabs.
+- `clipboardWrite`: Copies extracted code snippets, file trees, and AI prompts to clipboard.
+- Host permission `https://chat.deepseek.com/*`: Enables DeepSeek Chat DOM integration.
+
+---
+
+## Attribution
+
+Designed and maintained by **Muhammad Hamad Latif** (`muhammadlatif9292@gmail.com`).

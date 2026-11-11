@@ -2,121 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DeepSeek Companion — Help</title>
+  <title>DeepSeek Companion Pro — Help</title>
   <link rel="stylesheet" href="help.css">
 </head>
 <body>
   <div id="help-root">
     <header id="help-header">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      <h1>DeepSeek Companion — Help & Manual</h1>
+      <h1>DeepSeek Companion Pro — Help</h1>
     </header>
     <div id="help-body">
       <aside id="help-nav">
         <a href="#getting-started">1. Getting Started</a>
-        <a href="#code-downloader">2. Code Downloader</a>
-        <a href="#pdf-export">3. Exporting to PDF</a>
-        <a href="#docx-export">4. Exporting to DOCX</a>
-        <a href="#bookmarks">5. Bookmarks</a>
-        <a href="#templates">6. Templates</a>
-        <a href="#gemini-bridge">7. Gemini AI Bridge</a>
-        <a href="#shortcuts">8. Keyboard Shortcuts</a>
-        <a href="#faq">9. FAQ</a>
-        <a href="#privacy">10. Privacy</a>
+        <a href="#code-vault">2. Code Vault</a>
+        <a href="#export">3. Export</a>
+        <a href="#patcher">4. ZIP Patcher</a>
+        <a href="#zone">5. Zone Selector</a>
+        <a href="#dev-tools">6. Dev Tools</a>
+        <a href="#prompt">7. The AI Coding Prompt</a>
+        <a href="#faq">8. FAQ</a>
       </aside>
       <main id="help-content">
-        <section id="getting-started"><h2>1. Getting Started</h2>
-          <p>DeepSeek Companion adds a powerful sidebar panel to <strong>chat.deepseek.com</strong>. Once installed, a small toggle button appears on the right edge of the DeepSeek page.</p>
-          <h3>Opening the Sidebar</h3>
-          <p>Click the small <strong>◧ grid icon</strong> on the right edge of the page to toggle the companion sidebar open and closed. You can also click the extension icon in your browser toolbar.</p>
-          <h3>First Things to Try</h3>
+
+        <section id="getting-started">
+          <h2>1. Getting Started</h2>
+          <p>DeepSeek Companion Pro adds a sidebar to <strong>chat.deepseek.com</strong>. A small toggle button appears fixed on the right edge of the page — click it to open the sidebar.</p>
+          <h3>First steps</h3>
           <ul>
-            <li>Open a chat on DeepSeek that has code in the response</li>
-            <li>The extension will automatically detect code blocks and show a <strong>⬇ download button</strong> next to them</li>
-            <li>Open the sidebar → <strong>Code Vault</strong> tab to see all detected files</li>
-            <li>Try <strong>📄 PDF</strong> export from the Export Center tab</li>
+            <li>Open a DeepSeek chat that contains code in the responses</li>
+            <li>Click <strong>🔍 Scan</strong> in the Vault tab — the extension will scroll through the chat and extract all code files</li>
+            <li>Each detected code block gets a <strong>⬇ download button</strong> injected directly into its toolbar</li>
+            <li>Use <strong>📦 ZIP All</strong> to download everything as a single ZIP</li>
           </ul>
         </section>
-        <section id="code-downloader"><h2>2. Code Downloader</h2>
-          <p>The extension automatically scans every DeepSeek response for code blocks and adds a download button to each one.</p>
-          <h3>Filename Detection</h3>
-          <p>The extension uses 4 levels to detect filenames:</p>
+
+        <section id="code-vault">
+          <h2>2. Code Vault</h2>
+          <p>The Vault is your central file list. Every code block extracted from the chat lands here.</p>
+          <h3>Filename detection — 5 levels</h3>
           <ol>
-            <li><strong>Explicit filename</strong> in the text before the code block (e.g., "Save as <code>App.jsx</code>")</li>
-            <li><strong>Language tag</strong> on the code block (e.g., ```python → script.py)</li>
-            <li><strong>Content analysis</strong> — reads the code to guess the type</li>
-            <li><strong>Fallback</strong> — defaults to code_block.txt</li>
+            <li><strong>Line-1 comment</strong> (highest confidence): if you use the DSC AI Coding Prompt, DeepSeek writes the file path as the first comment in every block — e.g. <code>// src/components/Button.tsx</code></li>
+            <li><strong>Preceding text</strong>: backtick-quoted filenames, bold filenames, "File:" labels in the text above the block</li>
+            <li><strong>Path context</strong>: multi-segment paths like <code>src/api/index.ts</code> in surrounding text</li>
+            <li><strong>Language tag</strong>: uses the language name to pick a sensible default (<code>python</code> → <code>script.py</code>)</li>
+            <li><strong>Content analysis</strong>: inspects the code itself for syntax clues as a last resort</li>
           </ol>
-          <h3>Renaming Files</h3>
-          <p>In the Code Vault tab, click on a filename to edit it before downloading.</p>
-          <h3>Downloading All Code as ZIP</h3>
-          <p>Click <strong>📦 ZIP All</strong> in the Code Vault header to download all detected files as a single ZIP archive with automatic folder organization.</p>
+          <h3>Version resolution</h3>
+          <p>When DeepSeek rewrites a file across multiple messages, only the <strong>last occurrence</strong> is kept in the Vault — that is always the most recent version. Anonymous blocks (no detected path) are deduplicated by content fingerprint.</p>
+          <h3>Renaming files</h3>
+          <p>Click the filename text in any card — it becomes editable inline. Press Enter or click away to save.</p>
         </section>
-        <section id="pdf-export"><h2>3. Exporting to PDF</h2>
-          <p>Go to the <strong>Export Center</strong> tab → choose export scope → click <strong>📄 PDF</strong>.</p>
-          <h3>Choosing a Theme</h3>
-          <p>Four themes are available: <strong>DeepBlue</strong> (default), <strong>Obsidian</strong> (dark), <strong>Scholar</strong> (academic), and <strong>Emerald</strong>. Select from the PDF Options dropdown.</p>
-          <h3>Exporting a Full Conversation</h3>
-          <p>Select <strong>"Entire conversation"</strong> from the scope selector to export all assistant messages in the current chat.</p>
-        </section>
-        <section id="docx-export"><h2>4. Exporting to DOCX</h2>
-          <p>Click <strong>📝 DOCX</strong> in the Export Center. The file will download as a properly formatted Word document with headings, code blocks, and tables.</p>
-          <p>Open in Microsoft Word, Google Docs, or LibreOffice.</p>
-        </section>
-        <section id="bookmarks"><h2>5. Bookmarks</h2>
-          <p>Hover over any DeepSeek response message — a <strong>🔖 bookmark icon</strong> appears in the top-right corner. Click it to bookmark the message.</p>
-          <p>View all bookmarks in the <strong>🔖 Bookmarks</strong> tab. You can assign labels, filter by label, and export all bookmarks as a PDF summary.</p>
-        </section>
-        <section id="templates"><h2>6. Templates</h2>
-          <p>Templates let you save reusable prompts and insert them into DeepSeek's input box with one click.</p>
-          <h3>Creating a Template</h3>
-          <p>Go to the <strong>📝 Templates</strong> tab → click <strong>+ New</strong> → enter a name, category, and template text.</p>
-          <h3>Using Variables</h3>
-          <p>Use <code>{{variable_name}}</code> placeholders in your template. When you click "Use", a small form will appear asking for each variable.</p>
-          <h3>Importing Templates</h3>
-          <p>Click <strong>📥 Import</strong> and select a <code>.json</code> file of templates previously exported from this extension.</p>
-        </section>
-        <section id="gemini-bridge"><h2>7. Gemini AI Bridge</h2>
-          <p>The <strong>✨ AI Bridge</strong> tab sends any DeepSeek response to Gemini for reformatting, summarizing, translating, or other processing.</p>
-          <h3>Available Modes</h3>
+
+        <section id="export">
+          <h2>3. Export</h2>
+          <p>The Export tab lets you export the entire chat or just the last response as PDF, DOCX, Markdown, or plain text.</p>
           <ul>
-            <li><strong>Reformat & Beautify</strong> — restructures content with headings and examples</li>
-            <li><strong>Summarize</strong> — creates 3-5 bullet points</li>
-            <li><strong>Expand & Elaborate</strong> — adds more detail and examples</li>
-            <li><strong>Simplify</strong> — explains at beginner level</li>
-            <li><strong>Extract Key Points</strong> — lists facts and action items</li>
-            <li><strong>Translate</strong> — translates to your chosen language</li>
-            <li><strong>Custom Prompt</strong> — your own instruction</li>
+            <li><strong>Scope</strong>: "Last response only" or "Entire conversation" (respects Zone if active)</li>
+            <li><strong>PDF Options</strong>: theme, cover page, TOC, page numbers, syntax highlighting</li>
+            <li><strong>Recent exports</strong> are logged at the bottom for quick reference</li>
           </ul>
         </section>
-        <section id="shortcuts"><h2>8. Keyboard Shortcuts</h2>
-          <table class="shortcuts-table">
-            <tr><th>Action</th><th>Shortcut</th></tr>
-            <tr><td>Toggle Sidebar</td><td>Configured in Chrome settings</td></tr>
-            <tr><td>Download code block</td><td>Click ⬇ button on code block</td></tr>
-            <tr><td>Bookmark message</td><td>Click 🔖 on hover</td></tr>
-            <tr><td>Export PDF</td><td>Floating toolbar → 📄 PDF</td></tr>
-          </table>
-        </section>
-        <section id="faq"><h2>9. FAQ</h2>
-          <details><summary>Why wasn't my filename detected?</summary><p>The extension looks for filename patterns in the text before the code block. Try explicitly mentioning the filename, e.g., "Save this as <code>App.jsx</code>". The extension has 4 fallback levels and will always give you a downloadable file.</p></details>
-          <details><summary>The extension stopped working after a DeepSeek update</summary><p>DeepSeek may have changed their page structure. The extension uses resilient selectors, but major redesigns can affect detection. Try refreshing the page. If the issue persists, check for an extension update.</p></details>
-          <details><summary>How do I reset everything?</summary><p>Go to <strong>Settings → General → Reset All Settings</strong>. This clears all settings, bookmarks, and templates from storage.</p></details>
-          <details><summary>Is my data sent anywhere?</summary><p>Your data stays in your browser. The only external request is when you use the Gemini AI Bridge, which sends the selected text to Google's Gemini API using your configured key.</p></details>
-        </section>
-        <section id="privacy"><h2>10. Privacy Policy</h2>
-          <p>DeepSeek Companion stores the following data <strong>locally in your browser only</strong>:</p>
+
+        <section id="patcher">
+          <h2>4. ZIP Patcher</h2>
+          <p>This is the most powerful feature. When DeepSeek has updated your project across multiple responses, your Vault has the latest versions of all files. The Patcher merges them into your existing ZIP:</p>
+          <ol>
+            <li>Scan the chat first to populate the Vault (Vault tab → 🔍 Scan)</li>
+            <li>Go to the <strong>🔧 Patcher</strong> tab</li>
+            <li>Upload your existing project ZIP (drag &amp; drop or click)</li>
+            <li>Click <strong>Patch &amp; Download ZIP</strong></li>
+          </ol>
+          <h3>What it does</h3>
           <ul>
-            <li>Bookmarks (chrome.storage.local)</li>
-            <li>Templates (chrome.storage.local)</li>
-            <li>Settings and preferences (chrome.storage.sync)</li>
-            <li>Export history (chrome.storage.local)</li>
+            <li><strong>New files</strong> (in Vault but not in ZIP): added</li>
+            <li><strong>Changed files</strong> (content differs): replaced with Vault version</li>
+            <li><strong>Unchanged files</strong>: left untouched</li>
+            <li><strong>Files only in ZIP</strong>: preserved exactly as-is</li>
           </ul>
-          <p><strong>No data is sent to external servers</strong> except Gemini API calls, which are made directly from your browser to Google's API using your key.</p>
-          <p>To delete all stored data: Settings → General → Reset All Settings.</p>
+          <p>A full patch report shows exactly what was added, updated, and unchanged.</p>
         </section>
+
+        <section id="zone">
+          <h2>5. Zone Selector</h2>
+          <p>The Zone lets you limit scanning and export to a specific range of messages — useful in long chats where only the last 10 messages are relevant.</p>
+          <h3>Setting a zone</h3>
+          <ul>
+            <li><strong>Click mode</strong>: press "Set START" then click the first message on the page, then "Set END" and click the last</li>
+            <li><strong>Type mode</strong>: enter message numbers directly and press Apply</li>
+            <li><strong>Presets</strong>: Last 5 / 10 / 20, First 10</li>
+          </ul>
+          <p>Zone applies to: Vault scanning, ZIP All, and all export formats. A purple 🎯 badge appears on the Vault and Export tabs when a zone is active.</p>
+        </section>
+
+        <section id="dev-tools">
+          <h2>6. Dev Tools</h2>
+          <ul>
+            <li><strong>Stats</strong>: total files, combined size, total lines, number of languages</li>
+            <li><strong>Quick Prompts</strong>: 12 one-click prompts inserted directly into the DeepSeek input (Code Review, Write Tests, Refactor, TypeScript conversion, Dockerfile, CI/CD, etc.)</li>
+            <li><strong>Clipboard</strong>: copy all code concatenated, just filenames, a file tree, or export as JSON</li>
+            <li><strong>AI Coding Prompt</strong>: copies the full system prompt to paste at the start of a DeepSeek session — this is what makes file-path detection work perfectly</li>
+          </ul>
+        </section>
+
+        <section id="prompt">
+          <h2>7. The AI Coding Prompt</h2>
+          <p>For best results, paste this prompt <strong>at the very start</strong> of every coding conversation on DeepSeek. It instructs DeepSeek to always write the full file path as the first comment line in every code block, which gives the extension 100% accurate filename detection.</p>
+          <p>Find it in: <strong>Dev Tools tab → Copy Full Prompt</strong></p>
+          <h3>Example of what DeepSeek produces with the prompt active</h3>
+          <pre><code>// src/components/Button.tsx
+export function Button({ label }: { label: string }) {
+  return &lt;button&gt;{label}&lt;/button&gt;;
+}</code></pre>
+          <p>The extension reads that first comment line and assigns exactly <code>src/components/Button.tsx</code> as the filename — no guessing needed.</p>
+        </section>
+
+        <section id="faq">
+          <h2>8. FAQ</h2>
+          <dl>
+            <dt>The scan found 0 files</dt>
+            <dd>Make sure you are on <code>chat.deepseek.com</code> with an actual chat open. Try clicking Scan — it scrolls through the page to trigger lazy-loaded content.</dd>
+            <dt>Filenames are wrong</dt>
+            <dd>Use the AI Coding Prompt (Dev Tools tab) at the start of your session. Without it, the extension guesses based on context — with it, detection is exact.</dd>
+            <dt>The ZIP Patcher shows 0 added/updated</dt>
+            <dd>Make sure the Vault is populated first (Scan the chat), and that the code content actually differs from what is in your existing ZIP.</dd>
+            <dt>A file appears multiple times in the Vault</dt>
+            <dd>Scan again — the version resolver keeps only the last occurrence per path. If a file has no detected path it may appear as separate anonymous blocks.</dd>
+            <dt>The extension doesn't detect the DeepSeek input box</dt>
+            <dd>Quick Prompts need the DeepSeek input to be a textarea or contenteditable element. This works on the standard chat.deepseek.com interface.</dd>
+          </dl>
+        </section>
+
       </main>
     </div>
   </div>
+  <script>
+    document.querySelectorAll('#help-nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
 </body>
 </html>

@@ -3,152 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeepSeek Companion — King Edition</title>
+  <title>DeepSeek Companion Pro</title>
   <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
   <div id="sidebar-root">
+
+    <!-- HEADER -->
     <div id="sidebar-header">
-      <div class="header-logo">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        <span>DSC <span style="color:#2f81f7;font-weight:700;">King</span></span>
+      <div class="header-brand">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="7" height="7" rx="2" fill="#2f81f7"/>
+          <rect x="14" y="3" width="7" height="7" rx="2" fill="#2f81f7" opacity="0.65"/>
+          <rect x="3" y="14" width="7" height="7" rx="2" fill="#2f81f7" opacity="0.65"/>
+          <rect x="14" y="14" width="7" height="7" rx="2" fill="#2f81f7" opacity="0.35"/>
+        </svg>
+        <div class="header-brand-text">
+          <span class="brand-name">DSC <span style="color:#2f81f7">Pro</span></span>
+          <span class="brand-sub">v6.0</span>
+        </div>
       </div>
       <div class="header-actions">
         <button id="btn-settings" title="Settings" class="icon-btn">⚙</button>
-        <button id="btn-help" title="Help" class="icon-btn">?</button>
-        <button id="btn-close" title="Close" class="icon-btn">✕</button>
+        <button id="btn-help"     title="Help"     class="icon-btn">?</button>
+        <button id="btn-close"    title="Close"    class="icon-btn">✕</button>
       </div>
     </div>
 
+    <!-- TAB NAV -->
     <div id="tab-nav">
       <button class="tab-btn active" data-tab="vault">⬇ Vault</button>
-      <button class="tab-btn" data-tab="lab">🧪 Lab</button>
       <button class="tab-btn" data-tab="export">📤 Export</button>
-      <button class="tab-btn" data-tab="bookmarks">🔖 Marks</button>
-      <button class="tab-btn" data-tab="templates">📝 Tpls</button>
-      <button class="tab-btn" data-tab="gemini">✨ AI</button>
-      <button class="tab-btn" data-tab="devtools">🛠 Dev</button>
-      <button class="tab-btn" data-tab="settings">⚙</button>
+      <button class="tab-btn" data-tab="patcher">🔧 Patcher</button>
+      <button class="tab-btn" data-tab="zone">🎯 Zone</button>
+      <button class="tab-btn" data-tab="dev">🛠 Dev</button>
     </div>
 
+    <!-- TAB CONTENT -->
     <div id="tab-content">
 
-      <!-- TAB 1: CODE VAULT -->
+      <!-- ══════════════════ VAULT ══════════════════ -->
       <div id="tab-vault" class="tab-panel active">
         <div class="panel-header">
           <span>Code Vault</span>
-          <span class="badge" id="vault-count">0 files</span>
-          <button class="btn-secondary btn-sm" id="dsc-scan-all-btn">🔍 Scan All</button>
+          <span class="badge badge-blue" id="vault-count">0 files</span>
+          <span id="vault-zone-badge" class="badge badge-purple hidden">🎯 Zone</span>
+          <button class="btn-secondary btn-sm" id="dsc-scan-all-btn">🔍 Scan</button>
           <button class="btn-primary btn-sm" id="vault-download-all">📦 ZIP All</button>
         </div>
+
         <div class="vault-toolbar">
-          <input type="text" id="vault-search" class="search-input" placeholder="🔍 Filter files...">
-          <select id="vault-lang-filter" class="form-select-sm">
-            <option value="all">All langs</option>
-            <option value="javascript">JS</option>
-            <option value="typescript">TS</option>
-            <option value="python">Python</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="json">JSON</option>
-            <option value="bash">Shell</option>
-          </select>
-          <button class="btn-ghost btn-sm" id="vault-sort-btn">⇅</button>
-          <button class="btn-ghost btn-sm" id="vault-clear-btn">🗑</button>
+          <input type="text" id="vault-search" class="search-input" placeholder="Search files…">
+          <div class="vault-filter-group">
+            <button class="filter-chip active" data-lang="all">All</button>
+            <button class="filter-chip" data-lang="js">JS</button>
+            <button class="filter-chip" data-lang="py">Py</button>
+            <button class="filter-chip" data-lang="css">CSS</button>
+            <button class="filter-chip" data-lang="html">HTML</button>
+          </div>
         </div>
+
         <div id="vault-list" class="scrollable">
-          <div class="empty-state">No code blocks detected yet.<br>Open a conversation with code or click <b>Scan All</b>.</div>
-        </div>
-        <div class="panel-footer" id="vault-footer" style="display:none;">
-          <span id="vault-selected-count" style="font-size:11px;color:#8b949e;"></span>
-          <button class="btn-secondary btn-sm" id="vault-download-selected">📦 ZIP Selected</button>
-          <button class="btn-secondary btn-sm" id="vault-deselect-all">✕ Deselect</button>
-        </div>
-      </div>
-
-      <!-- TAB 2: LAB ZIP BUILDER -->
-      <div id="tab-lab" class="tab-panel">
-        <div class="panel-header">
-          <span>🧪 Lab ZIP Builder</span>
-          <span class="badge badge-purple" id="lab-file-count">0 files</span>
-        </div>
-        <div class="scrollable" style="padding:10px;">
-          <div class="lab-info-box">
-            <b>How it works:</b> Paste your full chat transcript. The AI identifies all unique file paths, deduplicates them (keeping only final/latest versions), and builds a correct downloadable ZIP structure.
-          </div>
-          <div class="form-group">
-            <label class="form-label">Gemini API Key</label>
-            <input id="lab-gemini-key" class="form-input" type="password" placeholder="AIza... (stored locally in browser)">
-          </div>
-          <div class="form-group">
-            <label class="form-label" style="display:flex;justify-content:space-between;">
-              <span>Chat Transcript</span>
-              <button class="btn-ghost btn-sm" id="lab-paste-chat-btn">📋 Paste</button>
-            </label>
-            <textarea id="lab-chat-input" class="form-textarea" rows="6" placeholder="Paste full chat here...&#10;&#10;AI will read it and identify all files."></textarea>
-            <div style="display:flex;gap:6px;margin-top:6px;">
-              <button class="btn-primary btn-sm" id="lab-analyze-btn" style="flex:1;">🤖 Analyze with AI</button>
-              <button class="btn-secondary btn-sm" id="lab-scan-live-btn">⚡ Live Scan</button>
-            </div>
-          </div>
-          <div id="lab-progress" class="hidden" style="margin:8px 0;">
-            <div class="progress-bar-wrap"><div class="progress-bar" id="lab-progress-bar" style="width:0%"></div></div>
-            <div id="lab-progress-text" style="font-size:11px;color:#8b949e;margin-top:4px;">Analyzing...</div>
-          </div>
-          <div id="lab-files-section" class="hidden">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <label class="form-label" style="margin:0;">Identified Files</label>
-              <div style="display:flex;gap:4px;">
-                <button class="btn-ghost btn-sm" id="lab-check-improve-btn">✨ Improve All</button>
-                <button class="btn-primary btn-sm" id="lab-download-zip-btn">📦 Download ZIP</button>
-              </div>
-            </div>
-            <div id="lab-file-list" class="lab-file-list"></div>
-          </div>
-          <div id="lab-improve-panel" class="hidden" style="margin-top:10px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-              <label class="form-label" style="margin:0;">🔧 File Verifier</label>
-              <button class="btn-ghost btn-sm" id="lab-improve-close">✕</button>
-            </div>
-            <div id="lab-improve-nav" style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-              <button class="btn-ghost btn-sm" id="lab-improve-prev">← Prev</button>
-              <span id="lab-improve-file-label" style="flex:1;font-size:12px;color:#e6edf3;text-align:center;font-family:monospace;"></span>
-              <button class="btn-ghost btn-sm" id="lab-improve-next">Next →</button>
-            </div>
-            <div id="lab-improve-status" style="font-size:11px;color:#8b949e;margin-bottom:6px;"></div>
-            <textarea id="lab-improve-code" class="form-textarea code-textarea" rows="12"></textarea>
-            <div style="display:flex;gap:6px;margin-top:6px;">
-              <button class="btn-primary btn-sm" id="lab-improve-run-btn" style="flex:1;">✨ Verify &amp; Improve</button>
-              <button class="btn-secondary btn-sm" id="lab-improve-accept-btn">✅ Accept</button>
-              <button class="btn-secondary btn-sm" id="lab-improve-copy-btn">📋 Copy</button>
-            </div>
+          <div class="empty-state">
+            <div class="empty-state-icon">📂</div>
+            No code blocks detected yet.<br>Open a DeepSeek conversation, then click <b>Scan</b>.
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: EXPORT CENTER -->
+      <!-- ══════════════════ EXPORT ══════════════════ -->
       <div id="tab-export" class="tab-panel">
         <div class="panel-header"><span>Export Center</span></div>
-        <div class="scrollable" style="padding:12px;">
+        <div class="scrollable" style="padding:14px;">
+
+          <div id="exp-zone-notice" class="hidden" style="background:rgba(163,113,247,0.08);border:1px solid rgba(163,113,247,0.3);border-radius:7px;padding:8px 11px;font-size:11px;color:var(--purple);margin-bottom:12px;">
+            🎯 <b>Zone active</b> — export is scoped to your selected message range.
+          </div>
+
           <div class="form-group">
-            <label class="form-label">Export Scope</label>
+            <label class="form-label">Scope</label>
             <div class="radio-group">
-              <label class="radio-label"><input type="radio" name="scope" value="last" checked> Last response</label>
-              <label class="radio-label"><input type="radio" name="scope" value="all"> Entire conversation</label>
-              <label class="radio-label"><input type="radio" name="scope" value="bookmarked"> Bookmarked only</label>
+              <label class="radio-label"><input type="radio" name="exp-scope" value="last" checked> Last response only</label>
+              <label class="radio-label"><input type="radio" name="exp-scope" value="all"> Entire conversation</label>
             </div>
           </div>
+
           <div class="form-group">
             <label class="form-label">Format</label>
-            <div class="export-btns">
+            <div class="export-btn-grid">
               <button class="export-btn" id="exp-pdf">📄 PDF</button>
               <button class="export-btn" id="exp-docx">📝 DOCX</button>
               <button class="export-btn" id="exp-md">🗒 Markdown</button>
-              <button class="export-btn" id="exp-txt">📋 Text</button>
-              <button class="export-btn" id="exp-html">🌐 HTML</button>
-              <button class="export-btn" id="exp-json">💾 JSON</button>
+              <button class="export-btn" id="exp-txt">📋 Plain Text</button>
             </div>
           </div>
+
           <details class="options-details">
             <summary>PDF Options</summary>
             <div class="options-body">
@@ -158,7 +107,6 @@
                 <option value="obsidian">Obsidian (dark)</option>
                 <option value="scholar">Scholar (academic)</option>
                 <option value="emerald">Emerald</option>
-                <option value="midnight">Midnight Purple</option>
               </select>
               <div class="toggle-row"><span>Cover Page</span><label class="toggle"><input type="checkbox" id="pdf-cover" checked><span class="slider"></span></label></div>
               <div class="toggle-row"><span>Table of Contents</span><label class="toggle"><input type="checkbox" id="pdf-toc" checked><span class="slider"></span></label></div>
@@ -166,243 +114,265 @@
               <div class="toggle-row"><span>Syntax Highlighting</span><label class="toggle"><input type="checkbox" id="pdf-syntax" checked><span class="slider"></span></label></div>
             </div>
           </details>
-          <div id="export-history-section">
-            <label class="form-label" style="margin-top:16px;">Recent Exports</label>
+
+          <div style="margin-top:16px;">
+            <label class="form-label">Recent Exports</label>
             <div id="export-history" class="export-history-list">
-              <div class="empty-state-sm">No exports yet.</div>
+              <div class="empty-state" style="padding:16px;">No exports yet.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- TAB 4: BOOKMARKS -->
-      <div id="tab-bookmarks" class="tab-panel">
+      <!-- ══════════════════ ZIP PATCHER ══════════════════ -->
+      <div id="tab-patcher" class="tab-panel">
         <div class="panel-header">
-          <span>Bookmarks</span>
-          <span class="badge" id="bookmark-count">0</span>
+          <span>ZIP Patcher</span>
+          <span class="badge badge-purple" id="patcher-vault-count">0 vault files</span>
         </div>
-        <div style="padding:8px;">
-          <input type="text" id="bookmark-search" class="search-input" placeholder="Search bookmarks...">
-          <div class="label-filters" id="label-filters">
-            <button class="chip active" data-label="all">All</button>
-            <button class="chip" data-label="🔴">🔴</button>
-            <button class="chip" data-label="🟡">🟡</button>
-            <button class="chip" data-label="🟢">🟢</button>
-            <button class="chip" data-label="🔵">🔵</button>
-          </div>
-        </div>
-        <div id="bookmark-list" class="scrollable">
-          <div class="empty-state">No bookmarks yet.<br>Hover a message and click 🔖</div>
-        </div>
-        <div class="panel-footer">
-          <button class="btn-secondary btn-sm" id="export-bookmarks-pdf">📄 PDF</button>
-          <button class="btn-secondary btn-sm" id="export-bookmarks-json">💾 JSON</button>
-          <button class="btn-danger btn-sm" id="clear-bookmarks">🗑 Clear</button>
-        </div>
-      </div>
+        <div class="scrollable" style="padding:12px; display:flex; flex-direction:column; gap:12px;">
 
-      <!-- TAB 5: TEMPLATES -->
-      <div id="tab-templates" class="tab-panel">
-        <div class="panel-header">
-          <span>Templates</span>
-          <button class="btn-primary btn-sm" id="add-template">+ New</button>
-        </div>
-        <div style="padding:8px;">
-          <input type="text" id="template-search" class="search-input" placeholder="Search templates...">
-          <select id="template-cat" class="form-select">
-            <option value="all">All Categories</option>
-            <option value="Development">Development</option>
-            <option value="Debugging">Debugging</option>
-            <option value="Writing">Writing</option>
-            <option value="Analysis">Analysis</option>
-            <option value="DevOps">DevOps</option>
-            <option value="Custom">Custom</option>
-          </select>
-        </div>
-        <div id="template-list" class="scrollable"></div>
-        <div class="panel-footer">
-          <button class="btn-secondary btn-sm" id="import-templates">📥 Import</button>
-          <button class="btn-secondary btn-sm" id="export-templates">📤 Export</button>
-        </div>
-        <div id="template-editor" class="modal hidden">
-          <div class="modal-inner">
-            <h3 id="template-editor-title">New Template</h3>
-            <label class="form-label">Name</label>
-            <input id="tpl-name" class="form-input" placeholder="Template name">
-            <label class="form-label">Category</label>
-            <select id="tpl-cat" class="form-select">
-              <option>Development</option><option>Debugging</option><option>Writing</option><option>Analysis</option><option>DevOps</option><option>Custom</option>
-            </select>
-            <label class="form-label">Template Text <span style="color:#8b949e;font-size:11px;">(use {{variable}})</span></label>
-            <textarea id="tpl-text" class="form-textarea" rows="6" placeholder="Enter your template..."></textarea>
-            <div class="modal-actions">
-              <button class="btn-primary" id="tpl-save">Save</button>
-              <button class="btn-secondary" id="tpl-cancel">Cancel</button>
-            </div>
+          <div class="info-box">
+            <b>How it works:</b> Upload your existing project ZIP. The extension compares it against your Vault —
+            adds every new file, replaces changed files, and leaves untouched files alone. Download the clean patched ZIP.
           </div>
-        </div>
-        <div id="var-modal" class="modal hidden">
-          <div class="modal-inner">
-            <h3>Fill Variables</h3>
-            <div id="var-fields"></div>
-            <div class="modal-actions">
-              <button class="btn-primary" id="var-insert">Insert Template</button>
-              <button class="btn-secondary" id="var-cancel">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- TAB 6: GEMINI AI BRIDGE -->
-      <div id="tab-gemini" class="tab-panel">
-        <div class="panel-header">
-          <span>✨ Gemini AI Bridge</span>
-          <span class="badge badge-purple" id="gemini-status">Ready</span>
-        </div>
-        <div class="scrollable" style="padding:12px;">
-          <div class="form-group">
-            <label class="form-label">API Key (optional override)</label>
-            <div style="display:flex;gap:6px;">
-              <input id="gemini-api-key-input" class="form-input" type="password" placeholder="AIza...">
-              <button class="btn-secondary btn-sm" id="gemini-key-save">Save</button>
+          <!-- Step 1: Upload ZIP -->
+          <div>
+            <label class="form-label">① Upload your existing ZIP</label>
+            <div class="patch-dropzone" id="patch-dropzone">
+              <div class="patch-dropzone-icon">📁</div>
+              <div class="patch-dropzone-label"><b>Click to choose</b> or drag &amp; drop a ZIP file</div>
+              <div class="patch-dropzone-hint">.zip files only</div>
+              <input type="file" id="patch-file-input" accept=".zip" style="display:none;">
+            </div>
+            <div class="patch-file-loaded hidden" id="patch-file-loaded">
+              <span style="font-size:18px;">📦</span>
+              <span class="patch-file-name" id="patch-file-name">—</span>
+              <button class="btn-ghost btn-sm" id="patch-file-clear">✕</button>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Mode</label>
-            <div class="radio-group radio-group-sm" id="gemini-mode-group">
-              <label class="radio-label"><input type="radio" name="gmode" value="reformat" checked> 🎨 Reformat</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="summarize"> 📋 Summarize</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="expand"> 📖 Expand</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="simplify"> 🧒 Simplify</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="keypoints"> 🎯 Key Points</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="debug"> 🐛 Debug Code</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="translate"> 🌐 Translate</label>
-              <label class="radio-label"><input type="radio" name="gmode" value="custom"> ✏️ Custom</label>
-            </div>
-          </div>
-          <div id="translate-options" class="form-group hidden">
-            <label class="form-label">Translate to</label>
-            <select id="translate-lang" class="form-select">
-              <option>Urdu</option><option>Arabic</option><option>French</option><option>German</option><option>Spanish</option><option>Chinese</option><option>Japanese</option><option>Portuguese</option><option>Russian</option>
-            </select>
-          </div>
-          <div id="custom-prompt-area" class="form-group hidden">
-            <label class="form-label">Your instruction</label>
-            <textarea id="custom-prompt" class="form-textarea" rows="3" placeholder="Enter your custom instruction..."></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Source</label>
-            <div class="radio-group">
-              <label class="radio-label"><input type="radio" name="gsource" value="last" checked> Last DeepSeek response</label>
-              <label class="radio-label"><input type="radio" name="gsource" value="paste"> Paste text</label>
-            </div>
-          </div>
-          <div id="paste-area" class="form-group hidden">
-            <textarea id="paste-text" class="form-textarea" rows="4" placeholder="Paste text here..."></textarea>
-          </div>
-          <button id="btn-run-gemini" class="btn-primary btn-full">
-            <span id="gemini-btn-text">✨ Run with Gemini</span>
-            <span id="gemini-spinner" class="spinner hidden"></span>
-          </button>
-          <div id="gemini-result-area" class="hidden">
-            <div class="result-header">
-              <label class="form-label">Gemini Response</label>
-              <div style="display:flex;gap:6px;">
-                <button class="btn-secondary btn-sm" id="gemini-copy">Copy</button>
-                <button class="btn-secondary btn-sm" id="gemini-export-pdf">PDF</button>
-                <button class="btn-secondary btn-sm" id="gemini-export-md">MD</button>
+
+          <!-- Step 2: Vault status -->
+          <div>
+            <label class="form-label">② Vault files to merge</label>
+            <div id="patcher-vault-status" class="zone-card">
+              <div class="zone-card-title">Vault</div>
+              <div id="patcher-vault-info" style="font-size:12px;color:var(--text-2);">
+                Scan the chat first to populate the Vault.
               </div>
             </div>
-            <div id="gemini-result" class="result-box"></div>
           </div>
+
+          <!-- Run button -->
+          <button class="btn-primary btn-full" id="patch-run-btn" disabled>
+            <span id="patch-btn-text">🔧 Patch &amp; Download ZIP</span>
+            <span id="patch-spinner" class="spinner hidden"></span>
+          </button>
+
+          <!-- Progress -->
+          <div id="patch-progress" class="hidden" style="display:flex;flex-direction:column;gap:4px;">
+            <div class="progress-wrap"><div class="progress-bar" id="patch-progress-bar" style="width:0%"></div></div>
+            <div id="patch-progress-text" style="font-size:11px;color:var(--text-2);">Processing…</div>
+          </div>
+
+          <!-- Report -->
+          <div id="patch-report" class="hidden" style="display:flex;flex-direction:column;gap:10px;">
+            <label class="form-label">Patch Report</label>
+            <div class="patch-report-card">
+              <div class="patch-report-row">
+                <span class="label">Files in uploaded ZIP</span>
+                <span class="count count-blue" id="rpt-existing">—</span>
+              </div>
+              <div class="patch-report-row">
+                <span class="label">New files added</span>
+                <span class="count count-green" id="rpt-added">—</span>
+              </div>
+              <div class="patch-report-row">
+                <span class="label">Files updated</span>
+                <span class="count count-yellow" id="rpt-replaced">—</span>
+              </div>
+              <div class="patch-report-row">
+                <span class="label">Unchanged</span>
+                <span class="count" style="color:var(--text-2)" id="rpt-unchanged">—</span>
+              </div>
+            </div>
+
+            <div id="rpt-detail-added" class="hidden">
+              <label class="form-label" style="color:var(--green);">✅ Added</label>
+              <div class="patch-detail-list" id="rpt-list-added"></div>
+            </div>
+            <div id="rpt-detail-replaced" class="hidden">
+              <label class="form-label" style="color:var(--yellow);">⚡ Updated</label>
+              <div class="patch-detail-list" id="rpt-list-replaced"></div>
+            </div>
+
+            <button class="btn-primary btn-full" id="patch-again-btn">🔧 Patch Again</button>
+          </div>
+
         </div>
       </div>
 
-      <!-- TAB 7: DEV TOOLS -->
-      <div id="tab-devtools" class="tab-panel">
-        <div class="panel-header"><span>🛠 Developer Tools</span></div>
-        <div class="scrollable" style="padding:10px;">
-          <div class="devtools-section">
-            <div class="devtools-section-title">⚡ Quick Prompts — click to insert into chat</div>
-            <div class="quick-prompts-grid">
-              <button class="quick-prompt-btn" data-prompt="Review this code for bugs, security issues, and performance problems. Give specific fixes:">🐛 Code Review</button>
-              <button class="quick-prompt-btn" data-prompt="Write comprehensive unit tests for this code using the appropriate testing framework:">🧪 Write Tests</button>
-              <button class="quick-prompt-btn" data-prompt="Add detailed JSDoc/docstring comments to every function and class in this code:">📝 Add Docs</button>
-              <button class="quick-prompt-btn" data-prompt="Refactor this code for better readability, performance, and maintainability. Explain each change:">♻️ Refactor</button>
-              <button class="quick-prompt-btn" data-prompt="Convert this code to TypeScript with proper types, interfaces, and generics:">🔷 To TypeScript</button>
-              <button class="quick-prompt-btn" data-prompt="Optimize this code for performance. Find bottlenecks and rewrite with better algorithms:">🚀 Optimize</button>
-              <button class="quick-prompt-btn" data-prompt="Explain this code step by step as if teaching a junior developer:">📖 Explain Code</button>
-              <button class="quick-prompt-btn" data-prompt="Create a complete README.md for this project with setup instructions, usage examples, and API docs:">📄 Gen README</button>
-              <button class="quick-prompt-btn" data-prompt="Find and fix all potential security vulnerabilities in this code:">🔒 Security Check</button>
-              <button class="quick-prompt-btn" data-prompt="Create a Dockerfile and docker-compose.yml for this project:">🐳 Dockerize</button>
-              <button class="quick-prompt-btn" data-prompt="Write a CI/CD GitHub Actions workflow for this project with lint, test, and deploy steps:">⚙️ CI/CD</button>
-              <button class="quick-prompt-btn" data-prompt="Convert this into a REST API with proper endpoints, error handling, and authentication:">🌐 Make API</button>
+      <!-- ══════════════════ ZONE ══════════════════ -->
+      <div id="tab-zone" class="tab-panel">
+        <div class="panel-header">
+          <span>🎯 Zone Selector</span>
+          <span class="badge badge-purple" id="zone-status-badge">Full Chat</span>
+        </div>
+        <div class="scrollable" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+
+          <div class="zone-card">
+            <div class="zone-card-title">Active Range</div>
+            <div id="zone-range-label" style="font-size:13px;color:var(--text-2);font-weight:600;">No zone — scanning full chat</div>
+            <div id="zone-range-stats" style="font-size:11px;color:var(--text-3);margin-top:3px;"></div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <button id="zone-btn-start" class="btn-primary btn-sm" style="padding:10px 6px;font-size:12px;line-height:1.5;flex-direction:column;display:flex;align-items:center;gap:2px;">
+              🟢 Set START<br><small style="opacity:0.75;font-weight:400;font-size:10px;">Click first msg</small>
+            </button>
+            <button id="zone-btn-end" class="btn-secondary btn-sm" style="padding:10px 6px;font-size:12px;line-height:1.5;flex-direction:column;display:flex;align-items:center;gap:2px;">
+              🔴 Set END<br><small style="opacity:0.75;font-weight:400;font-size:10px;">Click last msg</small>
+            </button>
+          </div>
+
+          <div class="zone-card">
+            <div class="zone-card-title">Type Message Numbers</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <input id="zone-input-start" type="number" min="1" placeholder="From #" class="form-input" style="flex:1;padding:6px 8px;font-size:12px;">
+              <span style="color:var(--text-2);font-size:12px;">→</span>
+              <input id="zone-input-end" type="number" min="1" placeholder="To #" class="form-input" style="flex:1;padding:6px 8px;font-size:12px;">
+              <button id="zone-btn-apply" class="btn-primary btn-sm">Apply</button>
+            </div>
+            <div style="font-size:10px;color:var(--text-3);margin-top:5px;">
+              Total messages indexed: <span id="zone-total">0</span>
+              <span id="zone-total-hint" style="display:none;color:var(--yellow);margin-left:4px;">— run Scan for accurate count</span>
             </div>
           </div>
-          <div class="devtools-section">
-            <div class="devtools-section-title">📊 Vault Stats</div>
-            <div id="devtools-stats" class="stats-grid">
+
+          <div class="zone-card">
+            <div class="zone-card-title">Quick Presets</div>
+            <div class="zone-preset-grid">
+              <button class="zone-preset btn-ghost btn-sm" data-preset="last5">Last 5 msgs</button>
+              <button class="zone-preset btn-ghost btn-sm" data-preset="last10">Last 10 msgs</button>
+              <button class="zone-preset btn-ghost btn-sm" data-preset="last20">Last 20 msgs</button>
+              <button class="zone-preset btn-ghost btn-sm" data-preset="first10">First 10 msgs</button>
+            </div>
+          </div>
+
+          <button id="zone-btn-scan" class="btn-primary btn-sm btn-full" style="padding:10px;">
+            🔍 Scan Zone Now
+          </button>
+          <button id="zone-btn-clear" class="btn-danger btn-sm btn-full" style="padding:8px;">
+            🔓 Clear Zone — Full Chat
+          </button>
+
+          <div class="zone-card" style="font-size:11px;color:var(--text-2);line-height:1.8;">
+            <div class="zone-card-title">Zone applies to</div>
+            Vault · ZIP All · PDF / DOCX / Markdown exports
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══════════════════ DEV TOOLS ══════════════════ -->
+      <div id="tab-dev" class="tab-panel">
+        <div class="panel-header"><span>🛠 Dev Tools</span></div>
+        <div class="scrollable" style="padding:12px;display:flex;flex-direction:column;gap:14px;">
+
+          <!-- Auto-Proceed -->
+          <div>
+            <div class="section-title">Auto-Proceed Engine</div>
+            <div class="autoproceed-card" id="autoproceed-card">
+              <div class="autoproceed-header">
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text);">⚡ Auto Continue</div>
+                  <div style="font-size:11px;color:var(--text-2);margin-top:2px;">Watches for <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;font-size:10px;font-family:monospace;">PROCEED</code> signal — types "continue" automatically</div>
+                </div>
+                <label class="toggle"><input type="checkbox" id="autoproceed-toggle"><span class="slider"></span></label>
+              </div>
+              <div id="autoproceed-status" class="autoproceed-status ap-idle">
+                <span id="ap-status-dot" class="ap-dot"></span>
+                <span id="ap-status-text">Disabled — enable to activate</span>
+              </div>
+              <div id="autoproceed-log" class="autoproceed-log hidden"></div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div>
+            <div class="section-title">Stats</div>
+            <div class="stats-grid">
               <div class="stat-box"><span id="stat-total">0</span><span>Files</span></div>
               <div class="stat-box"><span id="stat-size">0 KB</span><span>Size</span></div>
-              <div class="stat-box"><span id="stat-langs">0</span><span>Languages</span></div>
               <div class="stat-box"><span id="stat-lines">0</span><span>Lines</span></div>
+              <div class="stat-box"><span id="stat-langs">0</span><span>Langs</span></div>
             </div>
           </div>
-          <div class="devtools-section">
-            <div class="devtools-section-title">🔍 Search in Code Vault</div>
-            <div style="display:flex;gap:6px;margin-bottom:6px;">
-              <input id="devtools-search-input" class="form-input" placeholder="Search code content..." style="flex:1;">
-              <button class="btn-primary btn-sm" id="devtools-search-btn">Find</button>
+
+          <!-- Quick Prompts -->
+          <div>
+            <div class="section-title">Quick Prompts — click to insert into DeepSeek</div>
+            <div class="quick-prompts-grid">
+              <button class="quick-prompt-btn" data-prompt="Review this code for bugs, security issues, and performance problems. Give specific fixes:">🐛 Code Review</button>
+              <button class="quick-prompt-btn" data-prompt="Write comprehensive unit tests for this code:">🧪 Write Tests</button>
+              <button class="quick-prompt-btn" data-prompt="Add detailed JSDoc/docstring comments to every function:">📝 Add Docs</button>
+              <button class="quick-prompt-btn" data-prompt="Refactor this code for better readability and performance. Explain each change:">♻️ Refactor</button>
+              <button class="quick-prompt-btn" data-prompt="Convert this code to TypeScript with proper types and interfaces:">🔷 To TypeScript</button>
+              <button class="quick-prompt-btn" data-prompt="Optimize this code for performance. Find bottlenecks and fix them:">🚀 Optimize</button>
+              <button class="quick-prompt-btn" data-prompt="Explain this code step by step for a junior developer:">📖 Explain</button>
+              <button class="quick-prompt-btn" data-prompt="Create a complete README.md for this project:">📄 README</button>
+              <button class="quick-prompt-btn" data-prompt="Find and fix all security vulnerabilities in this code:">🔒 Security</button>
+              <button class="quick-prompt-btn" data-prompt="Create a Dockerfile and docker-compose.yml for this project:">🐳 Docker</button>
+              <button class="quick-prompt-btn" data-prompt="Write a GitHub Actions CI/CD workflow for this project:">⚙️ CI/CD</button>
+              <button class="quick-prompt-btn" data-prompt="Convert this into a REST API with proper endpoints and error handling:">🌐 Make API</button>
             </div>
-            <div id="devtools-search-results" class="search-results-box hidden"></div>
           </div>
-          <div class="devtools-section">
-            <div class="devtools-section-title">📋 Clipboard Tools</div>
+
+          <!-- Clipboard -->
+          <div>
+            <div class="section-title">Clipboard</div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button class="btn-secondary btn-sm" id="devtools-copy-all-code">📋 All Code</button>
-              <button class="btn-secondary btn-sm" id="devtools-copy-filenames">📋 File Names</button>
-              <button class="btn-secondary btn-sm" id="devtools-copy-structure">📋 File Tree</button>
-              <button class="btn-secondary btn-sm" id="devtools-export-json">💾 JSON Export</button>
+              <button class="btn-secondary btn-sm" id="dev-copy-all">📋 All Code</button>
+              <button class="btn-secondary btn-sm" id="dev-copy-names">📋 Filenames</button>
+              <button class="btn-secondary btn-sm" id="dev-copy-tree">📋 File Tree</button>
+              <button class="btn-secondary btn-sm" id="dev-export-json">💾 JSON</button>
             </div>
           </div>
+
+          <!-- DSC Prompt -->
+          <div>
+            <div class="section-title">AI Coding Prompt — paste at start of every DeepSeek session</div>
+            <div class="prompt-component">
+              <div class="prompt-tabs" id="prompt-tabs">
+                <button class="prompt-tab active" data-ptab="full">Full Prompt</button>
+                <button class="prompt-tab" data-ptab="short">Short Version</button>
+                <button class="prompt-tab" data-ptab="rules">Rules Only</button>
+              </div>
+              <div class="prompt-preview" id="prompt-preview-box"></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <button class="btn-primary btn-sm" style="flex:1;" id="dev-copy-prompt">📋 Copy Prompt</button>
+                <button class="btn-secondary btn-sm" style="flex:1;" id="dev-insert-prompt">⚡ Insert into DeepSeek</button>
+              </div>
+              <div class="info-box" style="margin-top:8px;margin-bottom:0;">
+                With this prompt active, DeepSeek writes <code style="background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:10px;">// src/path/file.ts</code> as line 1 of every code block — giving the extension <b>100% accurate</b> filename detection.
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- TAB 8: SETTINGS -->
-      <div id="tab-settings" class="tab-panel">
-        <div class="panel-header"><span>Quick Settings</span></div>
-        <div class="scrollable" style="padding:12px;">
-          <div class="toggle-row"><span>Auto-detect code blocks</span><label class="toggle"><input type="checkbox" id="s-autodetect" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Show download buttons</span><label class="toggle"><input type="checkbox" id="s-dlbtn" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Floating toolbar on messages</span><label class="toggle"><input type="checkbox" id="s-toolbar" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Table detection</span><label class="toggle"><input type="checkbox" id="s-tables" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Bookmark mode</span><label class="toggle"><input type="checkbox" id="s-bookmarks" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Dark theme</span><label class="toggle"><input type="checkbox" id="s-dark" checked><span class="slider"></span></label></div>
-          <div class="toggle-row"><span>Auto-scroll scan</span><label class="toggle"><input type="checkbox" id="s-autoscroll" checked><span class="slider"></span></label></div>
-          <div style="height:16px;"></div>
-          <button class="btn-primary btn-full" id="btn-open-full-settings">⚙ Open Full Settings</button>
-          <div style="margin-top:10px;">
-            <label class="form-label">Sidebar Width</label>
-            <input type="range" id="sidebar-width-slider" min="280" max="520" value="360" style="width:100%;">
-            <div style="font-size:10px;color:#8b949e;text-align:center;" id="sidebar-width-label">360px</div>
-          </div>
-          <div class="about-info">
-            <p>DeepSeek Companion <b>King Edition</b> v3.0.0</p>
-            <p>8 tabs · Lab ZIP · Gemini AI · Dev Tools</p>
-          </div>
-        </div>
-      </div>
+    </div><!-- /tab-content -->
 
-    </div>
-
-    <!-- Preview Modal -->
+    <!-- Code Preview Modal -->
     <div id="code-preview-modal" class="modal hidden">
       <div class="modal-inner" style="max-width:100%;width:100%;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <h3 id="preview-filename">preview</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 id="preview-filename" style="font-family:monospace;font-size:13px;">preview</h3>
           <div style="display:flex;gap:6px;">
             <button class="btn-secondary btn-sm" id="preview-copy-btn">📋 Copy</button>
-            <button class="btn-secondary btn-sm" id="preview-download-btn">⬇ Save</button>
+            <button class="btn-secondary btn-sm" id="preview-dl-btn">⬇ Save</button>
             <button class="icon-btn" id="close-preview">✕</button>
           </div>
         </div>
@@ -410,7 +380,8 @@
       </div>
     </div>
 
-  </div>
+  </div><!-- /sidebar-root -->
+
   <script src="../libs/jszip.min.js"></script>
   <script src="../libs/jspdf.umd.min.js"></script>
   <script src="../libs/jspdf-autotable.min.js"></script>
@@ -422,8 +393,8 @@
   <script src="../engines/text-structurizer.js"></script>
   <script src="../engines/pdf-engine.js"></script>
   <script src="../engines/docx-engine.js"></script>
-  <script src="../engines/zip-builder.js"></script>
   <script src="../engines/markdown-exporter.js"></script>
+  <script src="../engines/zip-patcher.js"></script>
   <script src="sidebar.js"></script>
 </body>
 </html>

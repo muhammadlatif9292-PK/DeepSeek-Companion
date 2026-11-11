@@ -1,5 +1,6 @@
-(function() {
-  // Navigation
+// settings.js — DeepSeek Companion Pro v4.0
+(function () {
+  // ── NAVIGATION ─────────────────────────────────────────────────────────────
   document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -9,15 +10,17 @@
     });
   });
 
-  // Range display
+  // ── RANGE DISPLAY ──────────────────────────────────────────────────────────
   document.querySelectorAll('input[type="range"]').forEach(r => {
     const valEl = document.getElementById(r.id + '-val');
     if (valEl) {
-      r.addEventListener('input', () => { valEl.textContent = r.value + (r.id.includes('tokens') ? '' : (r.id.includes('duration') ? 's' : 'pt')); });
+      const fmt = v => r.id.includes('duration') ? v + 's' : v + 'pt';
+      r.addEventListener('input', () => valEl.textContent = fmt(r.value));
+      valEl.textContent = fmt(r.value);
     }
   });
 
-  // Theme picker
+  // ── THEME PICKER ───────────────────────────────────────────────────────────
   document.querySelectorAll('.theme-opt').forEach(opt => {
     opt.addEventListener('click', () => {
       document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
@@ -25,125 +28,115 @@
       document.getElementById('s-pdf-theme').value = opt.dataset.theme;
     });
   });
-  document.querySelector('.theme-opt[data-theme="deepblue"]')?.classList.add('active');
 
-  // Verify Gemini key
-  document.getElementById('verify-gemini')?.addEventListener('click', async () => {
-    const key = document.getElementById('s-gemini-key').value;
-    try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-      if (r.ok) showStatus('✅ Gemini API key is valid!');
-      else showStatus('❌ Invalid API key (HTTP ' + r.status + ')');
-    } catch { showStatus('❌ Network error'); }
-  });
-
-  // Save settings
+  // ── SAVE ───────────────────────────────────────────────────────────────────
   document.getElementById('save-settings').addEventListener('click', saveAll);
-
-  // Load settings
-  loadAll();
-
-  // Help
   document.getElementById('open-help-btn')?.addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('help/help.html') });
   });
-
-  // Reset
   document.getElementById('reset-all')?.addEventListener('click', () => {
     if (confirm('Reset all settings to defaults?')) {
-      chrome.storage.sync.clear(() => { chrome.storage.local.clear(() => { location.reload(); }); });
+      chrome.storage.local.clear(() => location.reload());
     }
   });
+  document.getElementById('clear-export-history')?.addEventListener('click', () => {
+    chrome.storage.local.remove('exportHistory', () => showStatus('✅ Export history cleared'));
+  });
 
-  // Export/clear buttons
-  document.getElementById('export-bookmarks-btn')?.addEventListener('click', async () => {
-    const d = await chrome.storage.local.get('bookmarks');
-    downloadJSON(d.bookmarks || [], 'bookmarks.json');
-  });
-  document.getElementById('clear-bookmarks-btn')?.addEventListener('click', () => {
-    if (confirm('Delete all bookmarks?')) chrome.storage.local.remove('bookmarks', () => showStatus('Bookmarks cleared'));
-  });
-  document.getElementById('export-templates-btn')?.addEventListener('click', async () => {
-    const d = await chrome.storage.local.get('templates');
-    downloadJSON(d.templates || [], 'templates.json');
-  });
-  document.getElementById('clear-templates-btn')?.addEventListener('click', () => {
-    if (confirm('Delete all templates?')) chrome.storage.local.remove('templates', () => showStatus('Templates cleared'));
-  });
+  // ── LOAD / SAVE ────────────────────────────────────────────────────────────
+  function get(id) { return document.getElementById(id); }
+  function radioVal(name) { return document.querySelector(`input[name="${name}"]:checked`)?.value; }
+  function setRadio(name, val) {
+    const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+    if (el) el.checked = true;
+  }
 
   function getAllSettings() {
-    const get = id => document.getElementById(id);
-    const radioVal = name => document.querySelector(`input[name="${name}"]:checked`)?.value;
     return {
-      language: get('s-language')?.value,
-      autorun: get('s-autorun')?.checked,
+      autorun:       get('s-autorun')?.checked,
       notifications: get('s-notifications')?.checked,
       notifDuration: get('s-notif-duration')?.value,
-      codeAutodetect: get('s-code-autodetect')?.checked,
-      codeDlBtn: get('s-code-dlbtn')?.checked,
+      mutation:      get('s-mutation')?.checked,
+      codeDlbtn:     get('s-code-dlbtn')?.checked,
+      codeJunk:      get('s-code-junk')?.checked,
       codeDefaultName: get('s-code-default-name')?.value,
-      fnameFallback: radioVal('fname-fallback'),
-      zipOrg: radioVal('zip-org'),
-      zipReadme: get('s-zip-readme')?.checked,
-      pdfTheme: get('s-pdf-theme')?.value,
-      pdfSize: get('s-pdf-size')?.value,
-      pdfBodyFs: get('s-pdf-body-fs')?.value,
-      pdfCodeFs: get('s-pdf-code-fs')?.value,
-      pdfCover: get('s-pdf-cover')?.checked,
-      pdfToc: get('s-pdf-toc')?.checked,
-      pdfPagenum: get('s-pdf-pagenum')?.checked,
-      pdfSyntax: get('s-pdf-syntax')?.checked,
-      pdfLineno: get('s-pdf-lineno')?.checked,
-      docxPrimary: get('s-docx-primary')?.value,
-      docxFont: get('s-docx-font')?.value,
-      docxMargins: get('s-docx-margins')?.value,
-      docxCode: get('s-docx-code')?.checked,
-      docxAutofit: get('s-docx-autofit')?.checked,
-      defaultFormat: radioVal('def-format'),
-      fnameTitle: get('s-fname-title')?.checked,
-      fnameDate: get('s-fname-date')?.checked,
-      bmHover: get('s-bm-hover')?.checked,
-      bmBorder: get('s-bm-border')?.checked,
-      bmAutocode: get('s-bm-autocode')?.checked,
-      tplShow: get('s-tpl-show')?.checked,
-      geminiMode: get('s-gemini-mode')?.value,
-      maxTokens: get('s-max-tokens')?.value,
-      panelTheme: radioVal('panel-theme'),
-      accentColor: get('s-accent-color')?.value,
-      toolbarVis: radioVal('toolbar-vis'),
-      animSpeed: radioVal('anim-speed'),
+      zipOrg:        radioVal('zip-org'),
+      zipReadme:     get('s-zip-readme')?.checked,
+      pdfTheme:      get('s-pdf-theme')?.value,
+      pdfSize:       get('s-pdf-size')?.value,
+      pdfBodyFs:     get('s-pdf-body-fs')?.value,
+      pdfCodeFs:     get('s-pdf-code-fs')?.value,
+      pdfCover:      get('s-pdf-cover')?.checked,
+      pdfToc:        get('s-pdf-toc')?.checked,
+      pdfPagenum:    get('s-pdf-pagenum')?.checked,
+      pdfSyntax:     get('s-pdf-syntax')?.checked,
+      pdfLineno:     get('s-pdf-lineno')?.checked,
+      docxPrimary:   get('s-docx-primary')?.value,
+      docxFont:      get('s-docx-font')?.value,
+      docxMargins:   get('s-docx-margins')?.value,
+      docxCode:      get('s-docx-code')?.checked,
+      docxAutofit:   get('s-docx-autofit')?.checked,
+      defFormat:     radioVal('def-format'),
+      fnameDate:     get('s-fname-date')?.checked,
+      fnameTitle:    get('s-fname-title')?.checked,
+      sidebarWidth:  get('s-sidebar-width')?.value,
+      accentColor:   get('s-accent-color')?.value,
+      toolbarVis:    radioVal('toolbar-vis'),
     };
   }
 
-  async function saveAll() {
-    const settings = getAllSettings();
-    await chrome.storage.sync.set({ settings });
-    showStatus('✅ Settings saved!');
-  }
-
-  async function loadAll() {
-    const d = await chrome.storage.sync.get('settings');
-    const s = d.settings || {};
-    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) { if (el.type === 'checkbox') el.checked = val; else el.value = val; } };
-    const setRadio = (name, val) => { const el = document.querySelector(`input[name="${name}"][value="${val}"]`); if (el) el.checked = true; };
-
-    set('s-language', s.language); set('s-autorun', s.autorun); set('s-notifications', s.notifications);
-    set('s-code-autodetect', s.codeAutodetect); set('s-code-dlbtn', s.codeDlBtn);
-    set('s-pdf-theme', s.pdfTheme); set('s-pdf-size', s.pdfSize);
-    set('s-pdf-cover', s.pdfCover); set('s-pdf-toc', s.pdfToc); set('s-pdf-pagenum', s.pdfPagenum);
-    set('s-pdf-syntax', s.pdfSyntax); set('s-docx-code', s.docxCode);
-    set('s-fname-title', s.fnameTitle); set('s-fname-date', s.fnameDate);
-    set('s-accent-color', s.accentColor);
-
+  function applySettings(s) {
+    if (!s) return;
+    const cb = (id, val) => { const el = get(id); if (el && val != null) el.checked = val; };
+    const sv = (id, val) => { const el = get(id); if (el && val != null) el.value = val; };
+    cb('s-autorun',    s.autorun);
+    cb('s-notifications', s.notifications);
+    sv('s-notif-duration', s.notifDuration);
+    cb('s-mutation',   s.mutation);
+    cb('s-code-dlbtn', s.codeDlbtn);
+    cb('s-code-junk',  s.codeJunk);
+    sv('s-code-default-name', s.codeDefaultName);
+    if (s.zipOrg) setRadio('zip-org', s.zipOrg);
+    cb('s-zip-readme', s.zipReadme);
+    sv('s-pdf-theme',  s.pdfTheme);
+    sv('s-pdf-size',   s.pdfSize);
+    sv('s-pdf-body-fs', s.pdfBodyFs);
+    sv('s-pdf-code-fs', s.pdfCodeFs);
+    cb('s-pdf-cover',  s.pdfCover);
+    cb('s-pdf-toc',    s.pdfToc);
+    cb('s-pdf-pagenum', s.pdfPagenum);
+    cb('s-pdf-syntax', s.pdfSyntax);
+    cb('s-pdf-lineno', s.pdfLineno);
+    sv('s-docx-primary', s.docxPrimary);
+    sv('s-docx-font',  s.docxFont);
+    sv('s-docx-margins', s.docxMargins);
+    cb('s-docx-code',  s.docxCode);
+    cb('s-docx-autofit', s.docxAutofit);
+    if (s.defFormat) setRadio('def-format', s.defFormat);
+    cb('s-fname-date', s.fnameDate);
+    cb('s-fname-title', s.fnameTitle);
+    sv('s-sidebar-width', s.sidebarWidth);
+    sv('s-accent-color', s.accentColor);
+    if (s.toolbarVis) setRadio('toolbar-vis', s.toolbarVis);
+    // Activate correct theme swatch
     if (s.pdfTheme) {
       document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
       document.querySelector(`.theme-opt[data-theme="${s.pdfTheme}"]`)?.classList.add('active');
     }
-    if (s.fnameFallback) setRadio('fname-fallback', s.fnameFallback);
-    if (s.defaultFormat) setRadio('def-format', s.defaultFormat);
-    if (s.panelTheme) setRadio('panel-theme', s.panelTheme);
-    if (s.toolbarVis) setRadio('toolbar-vis', s.toolbarVis);
-    if (s.animSpeed) setRadio('anim-speed', s.animSpeed);
+    // Update range displays
+    document.querySelectorAll('input[type="range"]').forEach(r => {
+      const valEl = document.getElementById(r.id + '-val');
+      if (valEl) valEl.textContent = r.value + (r.id.includes('duration') ? 's' : 'pt');
+    });
+  }
+
+  function saveAll() {
+    const s = getAllSettings();
+    chrome.storage.local.set({ dscSettings: s }, () => showStatus('✅ Saved!'));
+  }
+
+  function loadAll() {
+    chrome.storage.local.get('dscSettings', d => applySettings(d.dscSettings));
   }
 
   function showStatus(msg) {
@@ -151,11 +144,5 @@
     if (el) { el.textContent = msg; setTimeout(() => el.textContent = '', 3000); }
   }
 
-  function downloadJSON(data, filename) {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
+  loadAll();
 })();

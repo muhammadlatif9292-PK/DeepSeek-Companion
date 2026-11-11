@@ -66,3 +66,28 @@ window.DSHelpers = {
     return div.innerHTML;
   }
 };
+
+// KING EDITION PATCH: Better conversation ID — prevents chat overwrite bug
+// Override v4's basic getConversationId with our multi-pattern version
+DSHelpers.getConversationId = function() {
+  const path = window.location.pathname;
+  const href = window.location.href;
+  const patterns = [
+    /\/chat\/s\/([a-zA-Z0-9_-]{8,})/,
+    /\/chat\/([a-zA-Z0-9_-]{8,})/,
+    /\/s\/([a-zA-Z0-9_-]{8,})/,
+    /[?&]id=([a-zA-Z0-9_-]{8,})/,
+  ];
+  for (const pat of patterns) {
+    const m = (path + '?' + href).match(pat);
+    if (m && m[1] && m[1] !== 'chat') return 'conv_' + m[1];
+  }
+  if (path === '/' || path === '/chat' || path.length < 6) {
+    let sessId = sessionStorage.getItem('dsc_session_id');
+    if (!sessId) { sessId = 'sess_' + Date.now().toString(36); sessionStorage.setItem('dsc_session_id', sessId); }
+    return sessId;
+  }
+  let hash = 0;
+  for (let i = 0; i < path.length; i++) hash = ((hash << 5) - hash) + path.charCodeAt(i);
+  return 'path_' + Math.abs(hash).toString(36);
+};

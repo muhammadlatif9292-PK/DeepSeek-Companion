@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "DeepSeek Companion — King Edition",
-  "version": "3.0.0",
-  "description": "The ultimate DeepSeek power tool: Smart Code Vault, AI-powered file management, Gemini Bridge, PDF/DOCX/ZIP export, Bookmarks, Templates, and developer tools.",
+  "name": "DeepSeek Companion Pro",
+  "version": "6.0.0",
+  "description": "Professional code extraction, multi-format export, auto-proceed, and ZIP patching for DeepSeek Chat.",
   "icons": {
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon48.png",
@@ -20,7 +20,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://chat.deepseek.com/*"],
+      "matches": [
+        "https://chat.deepseek.com/*"
+      ],
       "js": [
         "libs/dompurify.min.js",
         "libs/marked.min.js",
@@ -47,8 +49,7 @@
     "clipboardWrite"
   ],
   "host_permissions": [
-    "https://chat.deepseek.com/*",
-    "https://generativelanguage.googleapis.com/*"
+    "https://chat.deepseek.com/*"
   ],
   "web_accessible_resources": [
     {
@@ -57,11 +58,12 @@
         "sidebar/sidebar.css",
         "sidebar/sidebar.js",
         "libs/*",
-        "assets/fonts/*",
         "assets/logo.svg",
         "engines/*"
       ],
-      "matches": ["https://chat.deepseek.com/*"]
+      "matches": [
+        "https://chat.deepseek.com/*"
+      ]
     }
   ],
   "options_page": "settings/settings.html"

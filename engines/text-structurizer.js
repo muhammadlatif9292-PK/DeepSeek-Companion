@@ -35,16 +35,25 @@ window.TextStructurizer = {
         continue;
       }
 
+      const trimmedSetext = line.trim();
+      const canBeSetext = trimmedSetext.length > 0 &&
+        !trimmedSetext.startsWith('>') &&
+        !trimmedSetext.startsWith('#') &&
+        !/^(?:[-*+]|\d+[.)])\s+/.test(trimmedSetext) &&
+        !trimmedSetext.includes('|') &&
+        !/^[-*_]{3,}$/.test(trimmedSetext) &&
+        !/^={3,}$/.test(trimmedSetext);
+
       // Setext h1
-      if (i + 1 < lines.length && lines[i + 1].match(/^={3,}$/)) {
-        elements.push({ type: 'h1', text: line.trim() });
+      if (canBeSetext && i + 1 < lines.length && lines[i + 1].match(/^={3,}$/)) {
+        elements.push({ type: 'h1', text: trimmedSetext });
         i += 2;
         continue;
       }
 
       // Setext h2
-      if (i + 1 < lines.length && lines[i + 1].match(/^-{3,}$/) && line.trim().length > 0) {
-        elements.push({ type: 'h2', text: line.trim() });
+      if (canBeSetext && i + 1 < lines.length && lines[i + 1].match(/^-{3,}$/)) {
+        elements.push({ type: 'h2', text: trimmedSetext });
         i += 2;
         continue;
       }

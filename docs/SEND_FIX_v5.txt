@@ -1,0 +1,68 @@
+DS Companion Pro v5 — Send Engine Rewrite
+==========================================
+
+ROOT CAUSES FIXED
+-----------------
+1. WRONG EVENT ORDER
+   Old: execCommand → beforeinput → input
+   New: focus → selectionchange → beforeinput → execCommand → input → change → keyup
+   Why: Lexical requires beforeinput to fire BEFORE execCommand so it can
+        intercept and update its internal EditorState. Firing it after means
+        Lexical never "sees" the insert and the editor stays empty internally.
+
+2. NO BUTTON-ENABLED POLLING
+   Old: wait 300ms, check once, give up or use Enter
+   New: poll every 100ms for up to 2000ms until btn.disabled===false
+        AND aria-disabled!=="true"
+   Why: React state updates are async. The send button is disabled during
+        state reconciliation. 300ms is not enough — 2000ms polling is reliable.
+
+3. SEND BUTTON SCOPED WRONG
+   Old: querySelectorAll('button') globally, picks last button in DOM
+   New: starts from editor.closest('form') or parent containers,
+        filters: visible + SVG icon + not disabled + not aria-disabled,
+        sorts by rightmost position (send button is always rightmost)
+   Why: Global search can match stop/upload/mic buttons.
+
+4. INCOMPLETE MOUSE EVENT CHAIN
+   Old: mousedown + mouseup + click (missing pointerdown/pointerup)
+   New: pointerdown → mousedown → pointerup → mouseup → click → .click()
+   Why: Some React event handlers only fire on trusted pointer events.
+
+5. NO SEND VERIFICATION OR RETRY
+   Old: fire and forget, assume success
+   New: after each attempt, polls for 2500ms checking:
+        - editor.textContent is empty (message consumed), OR
+        - .ds-markdown--streaming / [class*="streaming"] appeared
+        If not confirmed: retries up to 3 times with 1s gap.
+
+6. DUPLICATE / SHADOWING FUNCTIONS REMOVED
+   Old: local findSendButton() shadowed DOMScanner.findSendButton() and
+        forceSendMessage() existed but was never called from autoContinueRetry
+   New: all functions delegate to _dscFindSendButton / _dscClickSendWhenReady /
+        _dscVerifySent from the v5 engine. One code path for everything.
+
+7. autoContinueRetry SIMPLIFIED
+   Old: manual retry loop with setTimeout chains, 200ms/300ms delays
+   New: one call to deepSeekRealSend('continue') which handles all
+        injection, polling, clicking, verification, and retries internally.
+
+8. DSC_INSERT_TEMPLATE ALSO FIXED
+   Now uses insertIntoEditor() → _dscInjectText() with correct event chain.
+
+DEBUGGING
+---------
+Open: chrome://extensions → Inspect Views → content script console
+Look for prefixes:
+  [DSC INJECT]     — text injection steps + exec result + final text
+  [DSC SEND BTN]   — how many button candidates found
+  [DSC POLL]       — per-100ms button enable polling
+  [DSC VERIFY]     — send confirmation checks
+  [DSC REAL SEND]  — overall attempt status
+  [DSC AUTO DEBUG] — PROCEED detection (unchanged from v4)
+
+INSTALL
+-------
+1. Remove old extension from chrome://extensions
+2. Extract this ZIP
+3. Load unpacked → select ext_v5 folder

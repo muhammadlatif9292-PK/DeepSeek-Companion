@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DeepSeek Companion — Settings</title>
+  <title>DeepSeek Companion Pro — Settings</title>
   <link rel="stylesheet" href="settings.css">
 </head>
 <body>
@@ -10,86 +10,68 @@
     <aside id="settings-nav">
       <div class="nav-logo">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        <span>Companion</span>
+        <span>DSC Pro</span>
       </div>
       <nav>
-        <a class="nav-item active" data-section="general">🔧 General</a>
-        <a class="nav-item" data-section="code">💻 Code Downloader</a>
-        <a class="nav-item" data-section="pdf">📄 PDF Settings</a>
-        <a class="nav-item" data-section="docx">📝 DOCX Settings</a>
+        <a class="nav-item active" data-section="general">⚙ General</a>
+        <a class="nav-item" data-section="code">💻 Code Vault</a>
+        <a class="nav-item" data-section="pdf">📄 PDF</a>
+        <a class="nav-item" data-section="docx">📝 DOCX</a>
         <a class="nav-item" data-section="export">📤 Export</a>
-        <a class="nav-item" data-section="bookmarks">🔖 Bookmarks</a>
-        <a class="nav-item" data-section="templates">📋 Templates</a>
-        <a class="nav-item" data-section="ai">✨ Gemini AI</a>
         <a class="nav-item" data-section="appearance">🎨 Appearance</a>
         <a class="nav-item" data-section="about">ℹ About</a>
       </nav>
     </aside>
 
     <main id="settings-main">
+
       <!-- GENERAL -->
       <section id="section-general" class="settings-section active">
         <h2>⚙ General Settings</h2>
-        <div class="setting-group">
-          <label class="setting-label">Language</label>
-          <select id="s-language" class="setting-input">
-            <option value="en">English</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="ar">العربية (Arabic)</option>
-            <option value="fr">Français (French)</option>
-            <option value="de">Deutsch (German)</option>
-            <option value="es">Español (Spanish)</option>
-          </select>
-        </div>
         <div class="setting-group toggle-setting">
-          <div><label class="setting-label">Auto-run on page load</label><p class="setting-desc">Automatically scan for code blocks when opening DeepSeek</p></div>
+          <div><label class="setting-label">Auto-scan on page load</label><p class="setting-desc">Automatically scan for code blocks when opening DeepSeek</p></div>
           <label class="toggle"><input type="checkbox" id="s-autorun" checked><span class="slider"></span></label>
         </div>
         <div class="setting-group toggle-setting">
-          <div><label class="setting-label">Show notifications</label><p class="setting-desc">Display toast notifications for actions</p></div>
+          <div><label class="setting-label">Show toast notifications</label><p class="setting-desc">Display action confirmations and scan results</p></div>
           <label class="toggle"><input type="checkbox" id="s-notifications" checked><span class="slider"></span></label>
         </div>
         <div class="setting-group">
-          <label class="setting-label">Notification duration</label>
+          <label class="setting-label">Notification duration: <span id="s-notif-duration-val">3s</span></label>
           <input type="range" id="s-notif-duration" min="1" max="10" value="3" class="setting-range">
-          <span id="s-notif-duration-val" class="range-val">3s</span>
+        </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Watch for new messages</label><p class="setting-desc">Auto-detect code blocks as new messages arrive</p></div>
+          <label class="toggle"><input type="checkbox" id="s-mutation" checked><span class="slider"></span></label>
         </div>
         <button class="btn-danger" id="reset-all">⚠ Reset All Settings</button>
       </section>
 
-      <!-- CODE -->
+      <!-- CODE VAULT -->
       <section id="section-code" class="settings-section">
-        <h2>💻 Code Downloader</h2>
+        <h2>💻 Code Vault</h2>
         <div class="setting-group toggle-setting">
-          <div><label class="setting-label">Auto-detect code blocks</label><p class="setting-desc">Automatically find and tag code blocks in messages</p></div>
-          <label class="toggle"><input type="checkbox" id="s-code-autodetect" checked><span class="slider"></span></label>
-        </div>
-        <div class="setting-group toggle-setting">
-          <div><label class="setting-label">Show download button on code blocks</label></div>
+          <div><label class="setting-label">Show download button on code blocks</label><p class="setting-desc">Injects a ⬇ button directly on each code block</p></div>
           <label class="toggle"><input type="checkbox" id="s-code-dlbtn" checked><span class="slider"></span></label>
         </div>
+        <div class="setting-group toggle-setting">
+          <div><label class="setting-label">Filter terminal-only bash blocks</label><p class="setting-desc">Skip single-line shell commands and terminal output from vault</p></div>
+          <label class="toggle"><input type="checkbox" id="s-code-junk" checked><span class="slider"></span></label>
+        </div>
         <div class="setting-group">
-          <label class="setting-label">Default fallback filename</label>
+          <label class="setting-label">Default filename fallback</label>
           <input type="text" id="s-code-default-name" class="setting-input" value="code_block" placeholder="code_block">
         </div>
         <div class="setting-group">
-          <label class="setting-label">If filename not found</label>
-          <div class="radio-col">
-            <label class="radio-label"><input type="radio" name="fname-fallback" value="ask" checked> Ask me</label>
-            <label class="radio-label"><input type="radio" name="fname-fallback" value="default"> Use default name</label>
-            <label class="radio-label"><input type="radio" name="fname-fallback" value="lang"> Use language name</label>
-          </div>
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">ZIP file organization</label>
+          <label class="setting-label">ZIP folder organization</label>
           <div class="radio-col">
             <label class="radio-label"><input type="radio" name="zip-org" value="lang" checked> By language/extension</label>
-            <label class="radio-label"><input type="radio" name="zip-org" value="path"> By path structure</label>
+            <label class="radio-label"><input type="radio" name="zip-org" value="path"> Preserve path structure</label>
             <label class="radio-label"><input type="radio" name="zip-org" value="flat"> Flat (all in root)</label>
           </div>
         </div>
         <div class="setting-group toggle-setting">
-          <div><label class="setting-label">Add README to ZIP</label></div>
+          <div><label class="setting-label">Add README.md to ZIP</label></div>
           <label class="toggle"><input type="checkbox" id="s-zip-readme" checked><span class="slider"></span></label>
         </div>
       </section>
@@ -160,67 +142,18 @@
             <label class="radio-label"><input type="radio" name="def-format" value="pdf" checked> PDF</label>
             <label class="radio-label"><input type="radio" name="def-format" value="docx"> DOCX</label>
             <label class="radio-label"><input type="radio" name="def-format" value="md"> Markdown</label>
+            <label class="radio-label"><input type="radio" name="def-format" value="zip"> ZIP (code only)</label>
           </div>
         </div>
-        <div class="setting-group toggle-setting"><div><label class="setting-label">Include conversation title in filename</label></div><label class="toggle"><input type="checkbox" id="s-fname-title" checked><span class="slider"></span></label></div>
         <div class="setting-group toggle-setting"><div><label class="setting-label">Include date in filename</label></div><label class="toggle"><input type="checkbox" id="s-fname-date" checked><span class="slider"></span></label></div>
+        <div class="setting-group toggle-setting"><div><label class="setting-label">Include conversation title</label></div><label class="toggle"><input type="checkbox" id="s-fname-title" checked><span class="slider"></span></label></div>
         <div class="setting-group">
           <label class="setting-label">Filename Preview</label>
           <div class="filename-preview" id="fname-preview">deepseek-export-2025-01-15.pdf</div>
         </div>
-      </section>
-
-      <!-- BOOKMARKS -->
-      <section id="section-bookmarks" class="settings-section">
-        <h2>🔖 Bookmarks</h2>
-        <div class="setting-group toggle-setting"><div><label class="setting-label">Show bookmark icon on hover</label></div><label class="toggle"><input type="checkbox" id="s-bm-hover" checked><span class="slider"></span></label></div>
-        <div class="setting-group toggle-setting"><div><label class="setting-label">Show label border on messages</label></div><label class="toggle"><input type="checkbox" id="s-bm-border" checked><span class="slider"></span></label></div>
-        <div class="setting-group toggle-setting"><div><label class="setting-label">Auto-bookmark messages with code</label></div><label class="toggle"><input type="checkbox" id="s-bm-autocode"><span class="slider"></span></label></div>
-        <div class="btn-row">
-          <button class="btn-secondary" id="export-bookmarks-btn">📤 Export All Bookmarks</button>
-          <button class="btn-danger" id="clear-bookmarks-btn">🗑 Clear All Bookmarks</button>
-        </div>
-      </section>
-
-      <!-- TEMPLATES -->
-      <section id="section-templates" class="settings-section">
-        <h2>📋 Templates</h2>
-        <div class="setting-group toggle-setting"><div><label class="setting-label">Show templates button near input</label></div><label class="toggle"><input type="checkbox" id="s-tpl-show" checked><span class="slider"></span></label></div>
-        <div class="btn-row">
-          <button class="btn-secondary" id="export-templates-btn">📤 Export Templates</button>
-          <button class="btn-danger" id="clear-templates-btn">🗑 Clear All Templates</button>
-        </div>
-      </section>
-
-      <!-- GEMINI AI -->
-      <section id="section-ai" class="settings-section">
-        <h2>✨ Gemini AI Bridge</h2>
-        <div class="ai-status">
-          <span class="dot dot-green"></span>
-          <span>Gemini API key is configured and active</span>
-        </div>
         <div class="setting-group">
-          <label class="setting-label">API Key</label>
-          <div class="api-key-row">
-            <input type="password" id="s-gemini-key" class="setting-input" placeholder="Enter your Gemini API key">
-            <button class="btn-secondary btn-sm" id="verify-gemini">✓ Verify</button>
-          </div>
-          <p class="setting-desc">Your API key is stored locally in your browser only. Never sent to third parties.</p>
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Default Mode</label>
-          <select id="s-gemini-mode" class="setting-input">
-            <option value="reformat">Reformat & Beautify</option>
-            <option value="summarize">Summarize</option>
-            <option value="expand">Expand & Elaborate</option>
-            <option value="simplify">Simplify</option>
-            <option value="keypoints">Extract Key Points</option>
-            <option value="translate">Translate</option>
-          </select>
-        </div>
-        <div class="setting-group">
-          <label class="setting-label">Max Response Length: <span id="s-max-tokens-val">2000</span> tokens</label>
-          <input type="range" id="s-max-tokens" min="500" max="4000" value="2000" step="100" class="setting-range">
+          <label class="setting-label">Clear Export History</label>
+          <button class="btn-danger btn-sm" id="clear-export-history">🗑 Clear History</button>
         </div>
       </section>
 
@@ -228,12 +161,13 @@
       <section id="section-appearance" class="settings-section">
         <h2>🎨 Appearance</h2>
         <div class="setting-group">
-          <label class="setting-label">Panel Theme</label>
-          <div class="radio-col">
-            <label class="radio-label"><input type="radio" name="panel-theme" value="dark" checked> Dark (default)</label>
-            <label class="radio-label"><input type="radio" name="panel-theme" value="light"> Light</label>
-            <label class="radio-label"><input type="radio" name="panel-theme" value="auto"> Auto (system)</label>
-          </div>
+          <label class="setting-label">Sidebar Width</label>
+          <select id="s-sidebar-width" class="setting-input">
+            <option value="340">Narrow (340px)</option>
+            <option value="380" selected>Default (380px)</option>
+            <option value="440">Wide (440px)</option>
+            <option value="500">Extra Wide (500px)</option>
+          </select>
         </div>
         <div class="setting-group">
           <label class="setting-label">Accent Color</label>
@@ -247,15 +181,6 @@
             <label class="radio-label"><input type="radio" name="toolbar-vis" value="never"> Never</label>
           </div>
         </div>
-        <div class="setting-group">
-          <label class="setting-label">Animation Speed</label>
-          <div class="radio-col">
-            <label class="radio-label"><input type="radio" name="anim-speed" value="fast"> Fast</label>
-            <label class="radio-label"><input type="radio" name="anim-speed" value="normal" checked> Normal</label>
-            <label class="radio-label"><input type="radio" name="anim-speed" value="slow"> Slow</label>
-            <label class="radio-label"><input type="radio" name="anim-speed" value="none"> None</label>
-          </div>
-        </div>
       </section>
 
       <!-- ABOUT -->
@@ -263,16 +188,18 @@
         <h2>ℹ About</h2>
         <div class="about-card">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="#2f81f7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-          <h3>DeepSeek Companion</h3>
-          <p class="version-info">Version 1.0.0 · April 2026</p>
-          <p class="about-desc">Your all-in-one companion for DeepSeek Chat. Download code, export to PDF/DOCX, manage bookmarks, and supercharge your workflow with Gemini AI.</p>
+          <h3>DeepSeek Companion Pro</h3>
+          <p class="version-info">Version 6.0.0 · May 2026</p>
+          <p class="about-desc">Professional code extraction, export, and ZIP management for DeepSeek Chat. Built specifically for DeepSeek's DOM structure.</p>
         </div>
         <div class="btn-row">
           <button class="btn-secondary" id="open-help-btn">📖 Open Help</button>
         </div>
         <div class="changelog">
           <h4>Changelog</h4>
-          <div class="changelog-item"><span class="cl-version">v1.0.0</span><span class="cl-desc">Initial release — all features included</span></div>
+          <div class="changelog-item"><span class="cl-version">v6.0.0</span><span class="cl-desc">Send Engine v5 (Lexical/React editor injection + retry), fixed MV3 Service Worker ZIP &amp; PDF exports, live Export tab scoping</span></div>
+          <div class="changelog-item"><span class="cl-version">v4.0.0</span><span class="cl-desc">Clean rebuild — ZIP Patcher, Version Resolution, removed unused features</span></div>
+          <div class="changelog-item"><span class="cl-version">v3.6.0</span><span class="cl-desc">Boundary Zone, IntersectionObserver, DOM-order indexing</span></div>
         </div>
       </section>
 

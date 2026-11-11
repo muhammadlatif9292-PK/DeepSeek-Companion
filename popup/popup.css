@@ -1,24 +1,93 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: #0d1117; color: #e6edf3; font-family: 'Inter', -apple-system, sans-serif; width: 240px; }
-#popup { padding: 12px; }
-.popup-header { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #30363d; margin-bottom: 10px; }
-.popup-header span:nth-child(2) { flex: 1; font-weight: 600; font-size: 13px; }
-.version { font-size: 10px; color: #8b949e; }
-.status-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #8b949e; margin-bottom: 10px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot-green { background: #3fb950; box-shadow: 0 0 6px #3fb950; }
-.dot-grey { background: #8b949e; }
-.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
-.action-btn {
-  background: #161b22; border: 1px solid #30363d; color: #e6edf3;
-  border-radius: 6px; padding: 10px 8px; cursor: pointer; text-align: center;
-  font-size: 11px; font-family: inherit; transition: all 0.15s;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
+/* popup.css — DeepSeek Companion Pro v4.0 */
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --blue: #2f81f7;
+  --radius: 8px;
 }
-.action-btn:hover { border-color: #2f81f7; color: #2f81f7; background: rgba(47,129,247,0.08); }
-.action-icon { font-size: 16px; }
-.stats { display: flex; justify-content: space-around; border-top: 1px solid #30363d; border-bottom: 1px solid #30363d; padding: 8px 0; margin-bottom: 8px; }
-.stat { text-align: center; display: flex; flex-direction: column; gap: 2px; }
-.stat span:first-child { font-size: 16px; font-weight: 700; color: #2f81f7; }
-.stat span:last-child { font-size: 10px; color: #8b949e; }
-.powered-by { text-align: center; font-size: 10px; color: #a371f7; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 240px;
+  font-size: 13px;
+}
+
+#popup { display: flex; flex-direction: column; }
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-text { display: flex; flex-direction: column; gap: 1px; }
+.title { font-weight: 700; font-size: 13px; color: var(--text); }
+.subtitle { font-size: 10px; color: var(--text-secondary); }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-grey { background: #484f58; }
+.dot-green { background: #3fb950; box-shadow: 0 0 6px #3fb95066; }
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 10px 12px;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 6px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.action-btn:hover { background: var(--bg3); color: var(--text); border-color: #484f58; }
+.action-btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.action-btn.primary:hover { background: #1a6cd4; border-color: #1a6cd4; }
+.action-icon { font-size: 16px; line-height: 1; }
+
+.stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 14px 12px;
+}
+.stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.stat-val { font-size: 16px; font-weight: 700; color: var(--blue); }
+.stat-lbl { font-size: 10px; color: var(--text-secondary); }
+.stat-div { width: 1px; height: 24px; background: var(--border); }
